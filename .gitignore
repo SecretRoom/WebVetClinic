@@ -1,0 +1,51 @@
+package-lock.json
+
+.idea
+.idea1
+.mypy_cache
+__pycache__
+config.py
+/venv/
+/venv
+venv
+.pyc
+/.pyc
+*.pyc
+/*.sh
+TEMP
+#client
+.vscode
+
+/remote-profile
+/node_modules
+start_remote-debugging-chrome.sh
+/build
+jsdoc.json
+/styleguide
+/styleguide.config.js
+/.docz
+/doces
+/docs
+*.sh
+# dependencies
+/.pnp
+.pnp.js
+
+# testing
+/app/client/coverage
+# production
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.whl
+.whl
+/app/client/node_modules/
+/.mypy_cache/
+/venv1/

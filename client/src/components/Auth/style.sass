@@ -1,0 +1,58 @@
+.auth
+  display: flex
+  justify-content: center
+  .login_form
+    padding-top: 40px
+    background: white
+    width: 600px
+    height: 400px
+    display: grid
+    border-radius: 4px
+    grid-template-rows: 50px repeat(2, 107px) 42px
+    grid-template-columns: 400px
+    align-items: center
+    justify-content: center
+    .error.field
+      .label
+        font-weight: normal !important
+    input
+      height: auto !important
+    .auth-preloader
+      margin: 20% auto
+      width: 25%
+
+    .btn_in
+      display: flex
+      justify-content: space-between
+
+        
+    .label_title
+      color: black
+      line-height: 1.2
+      text-transform: uppercase
+      text-align: center
+      width: 100%
+      display: block
+      margin-bottom: 0px !important
+      h1
+        font-size: 36px
+
+
+    .password
+      margin-top: 10px
+
+    .field
+      margin: 0 !important
+      padding: 5px
+
+    .field:nth-child(2)
+      align-self: end
+      padding: 0px
+
+    .field:nth-child(3)
+      align-self: baseline
+      padding: 0px
+
+    .field:last-child
+      align-items: center
+

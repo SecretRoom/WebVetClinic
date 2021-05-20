@@ -1,0 +1,61 @@
+.profile-menu-wrapper
+  display: grid !important
+  grid-template-columns: auto auto
+  grid-gap: 10px
+  align-items: center
+  padding: 0 !important
+  &>.visible.menu.transition
+    z-index: 99
+    top: 45px
+    width: max-content
+    .divider
+      margin: 0 !important
+.profile-menu
+  display: grid
+  grid-template-columns: 1fr auto
+  align-items: center
+  grid-gap: 10px
+  // i
+  //   display: block
+  //   width: 35px
+  //   height: 35px
+  //   border-radius: 50%
+  //   background-color: #eee
+
+.current-profile
+  display: grid
+  grid-gap: 10px
+  font-size: 14px
+  &>*
+    h2
+      font-weight: 400
+      font-size: 14px
+      color: #555
+      padding: 5px
+      margin: 0 !important
+    span
+      height: max-content
+      // font-weight: bold
+
+  .profile-info
+    display: grid
+    align-items: center
+    grid-template-columns: 100px 1fr
+    white-space: pre-wrap !important
+    white-space: -moz-pre-wrap !important
+    white-space: -pre-wrap !important
+    white-space: -o-pre-wrap !important
+    word-wrap: break-word !important
+
+.profile-word-wrap
+  white-space: pre-line !important
+  white-space: -moz-pre-wrap !important
+  white-space: -pre-wrap !important
+  white-space: -o-pre-wrap !important
+  word-wrap: break-word !important
+  width: 350px
+  &>span
+    line-height: 20px !important
+.ui.menu .ui.dropdown .menu>.active.item
+  background-color: #396ea8 !important
+  color: #ffffff !important

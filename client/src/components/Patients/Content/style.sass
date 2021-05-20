@@ -1,0 +1,29 @@
+@import '../../../style/_constants'
+
+.loader-patientsContent
+
+.patients-content
+  display: grid
+  grid-template-columns: repeat(auto-fill,minmax(400px,1fr))
+  grid-gap: 10px
+  .patient-card__segment
+    margin: 0 !important
+    .patient-card
+      display: grid
+      grid-gap: 5px
+      &__header
+        color: $accent_color
+        font-weight: bold
+        font-size: 16px
+      &__content
+        display: grid
+        grid-gap: 5px
+        grid-template-columns: 1fr 1fr
+        div
+          color: $main_font !important
+          font-size: $mainSize
+        span
+          color: $main_font !important
+          font-weight: 700
+      .ui.divider
+        margin: 0

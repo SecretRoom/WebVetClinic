@@ -1,0 +1,7 @@
+export const AUTH_REQUEST = 'AUTH_REQUEST'
+export const AUTH_SUCCESS = 'AUTH_SUCCESS'
+export const AUTH_ERROR = 'AUTH_ERROR'
+export const LOG_OUT = 'LOG_OUT'
+// export const SET_USER_DATA = 'SET_USER_DATA'
+// export const CHANGE_LOAD_IDB = 'CHANGE_LOAD_IDB'
+// export const CHANGE_FETCHING = 'CHANGE_FETCHING'

@@ -1,0 +1,6 @@
+export const FETCH_PATIENTS_REQUEST = 'fetch/patients:request'
+export const FETCH_PATIENTS_SUCCESS = 'fetch/patients:success'
+export const FETCH_PATIENTS_ERROR = 'fetch/patients:error'
+export const FETCH_PATIENT_REQUEST = 'fetch/patient:request'
+export const FETCH_PATIENT_SUCCESS = 'fetch/patient:success'
+export const FETCH_PATIENT_ERROR = 'fetch/patient:error'

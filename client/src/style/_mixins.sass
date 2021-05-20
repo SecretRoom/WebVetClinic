@@ -1,0 +1,101 @@
+// Всплывающая подсказка
+@mixin tooltip
+  position: absolute
+  font-weight: normal
+  font-size: 14px
+  margin-left: 30%
+  color: #777
+  background: #fff
+  border: 1px solid #dadada
+  border-radius: 4px
+  padding: 5px 10px
+  top: -30px
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2)
+
+@mixin error
+  text-align: center
+  padding: 20px
+  font-weight: 800
+  color: #999
+
+@mixin box_header
+  display: flex
+  // flex: 1 1 auto
+  // grid-template-columns: auto 1fr
+  // grid-gap: $gap
+  position: relative
+  cursor: pointer
+  height: 30px
+  padding: 5px 0
+  // border-radius: 2px
+  justify-items: start
+  align-items: center
+  margin-bottom: 7px
+  font-size: 1em
+  font-weight: 300
+  text-transform: capitalize
+  // background-color: $accent_color
+  border-bottom: 1px solid #dadada
+  // color: #fff
+  // color: #333
+  color: $accent_color
+  // border-radius: 2px 2px 0 0
+
+@mixin content-wrapper
+  margin: 5px
+  text-align: center
+
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal, $asset-pipeline: false )
+  @font-face
+    font-family: $font-family
+    font-weight: $weight
+    font-style: $style
+
+    @if $asset-pipeline == true
+      src: font-url('#{$file-path}.eot')
+      src: font-url('#{$file-path}.eot?#iefix') format('embedded-opentype'), font-url('#{$file-path}.woff') format('woff'), font-url('#{$file-path}.ttf') format('truetype')
+    @else
+      src: url('#{$file-path}.eot')
+      src: url('#{$file-path}.eot?#iefix') format('embedded-opentype'), url('#{$file-path}.woff') format('woff'), url('#{$file-path}.ttf') format('truetype')
+
+// OLD не использовать
+//Оформление блока компонента/виджета без отступов 
+@mixin box
+  background-color: #fff
+  padding: 1em 1em
+  // box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12), 0px 2px 10px 0px rgba(34, 36, 38, 0.15)
+  border-radius: 4px
+  border: 1px solid rgba(34, 36, 38, 0.15)
+
+//Оформление блока компонента/виджета с отступами
+@mixin content-box
+  padding: 10px
+  @include box
+
+@mixin box_hover
+  cursor: pointer
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1)
+
+@mixin primary-button
+  background-color: #2185D0
+  border: none
+  color: #fff
+  min-width: 100px
+  margin-right: 5px
+  font-weight: bold
+  display: inline-block
+  font-weight: 400
+  text-align: center
+  vertical-align: middle
+  user-select: none
+  padding: .45rem 1.1rem
+  font-size: 13px
+  font-weight: 800
+  line-height: 1.5
+  border-radius: 2px
+  -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
+  &:hover
+    background: darken(#2185D0, 5%)
+  &:focus
+    background: lighten(#2185D0, 5%)

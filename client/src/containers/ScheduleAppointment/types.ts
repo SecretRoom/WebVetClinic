@@ -1,0 +1,6 @@
+export const FETCH_SCHEDULE_APPOINTMENT_REQUEST = 'fetch/scheduleAppointment:request'
+export const FETCH_SCHEDULE_APPOINTMENT_SUCCESS = 'fetch/scheduleAppointment:success'
+export const FETCH_SCHEDULE_APPOINTMENT_ERROR = 'fetch/scheduleAppointment:error'
+export const ADD_APPOINTMENT_REQUEST = 'add/appointment:request'
+export const ADD_APPOINTMENT_SUCCESS = 'add/appointment:success'
+export const ADD_APPOINTMENT_ERROR = 'add/appointment:error'

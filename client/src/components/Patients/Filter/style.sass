@@ -1,0 +1,87 @@
+@import '../../../style'
+
+.patients-filter
+  &__quick
+    display: grid
+    grid-template-columns: repeat(4, max-content)
+    grid-gap: $gap
+    height: max-content
+    padding: 5px !important
+    margin: 0 !important
+    align-items: center
+    cursor: default !important
+    .find-patient
+      display: grid
+      grid-template-columns: repeat(2, max-content)
+      align-items: center
+      grid-gap: 15px
+      padding: 0 5px
+      margin-right: 5px
+      h4
+        margin: 0
+        height: max-content
+  &__full
+    margin: 0 !important
+    display: grid !important
+    grid-template-rows: repeat(3,max-content)
+    grid-gap: 10px
+    .fields, .fields-moreInf
+      display: grid
+      grid-template-columns: repeat(auto-fit, 150px)
+      grid-gap: 10px
+      .field
+        display: grid
+        align-items: end
+        grid-template-rows: repeat(2,max-content)
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          width: 140px
+          margin-left: 5px
+          height: 20px
+        span
+          color: #484848
+          font-weight: bold
+          font-size: small
+      .field-empty
+        display: grid
+        align-items: end
+        height: 40px
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          width: 140px
+          height: 30px
+    .fields-moreInf
+      grid-template-columns: 150px 90px repeat(2,100px)
+      .field
+        input
+          width: 90px
+      .field-empty
+        input
+          width: 90px
+    .fields-any
+      display: grid
+      grid-template-columns: 150px repeat(4,max-content)
+      grid-gap: 10px
+      align-items: end
+      .field
+        display: grid
+        align-items: end
+        grid-template-rows: repeat(2,max-content)
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          height: 20px
+          width: 140px
+        span
+          color: #484848
+          font-weight: bold
+          font-size: small
+      .field-empty
+        display: grid
+        height: 40px
+        align-items: end
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          width: 140px !important
+          height: 30px
+      .ui.button
+        height: max-content
