@@ -6,9 +6,6 @@ import {
 } from './actions';
 import IndexedDB from '../../services/IndexedDB'
 
-import OmsCompaniesAPI from '../../services/API/OmsCompanies'
-import ExaminationAPI from '../../services/API/Examination'
-import DiagnosesAPI from '../../services/API/Diagnoses'
 import StaffAPI from '../../services/API/Staff'
 
 import { NAME_INDEXED_DB } from '../../config';
@@ -25,23 +22,14 @@ function* authSaga(action: ActionType<typeof authA.request>): SagaIterator {
   try {
     const { status, userID } = yield call([AuthAPI, AuthAPI.auth], action.payload)
     if (status !== '1') {
-      const dataDiagnoses = yield call([ExaminationAPI, DiagnosesAPI.getDiagnoses])
-      const dataOmsCompanies = yield call([OmsCompaniesAPI, OmsCompaniesAPI.getOmsCompanies])
-      const dataExamTypes = yield call([ExaminationAPI, ExaminationAPI.getExamTypeList])
-      const dataStaff = yield call([ExaminationAPI, StaffAPI.getStaff])
+      const dataStaff = yield call([StaffAPI, StaffAPI.getStaff], {})
 
       if (
-        dataOmsCompanies.status !== '1'
-        && dataExamTypes.status !== '1'
-        && dataDiagnoses.status !== '1'
-        && dataStaff.status !== '1'
+        dataStaff.status !== '1'
       ) {
         IndexedDB.createDB(
           NAME_INDEXED_DB.nameDB,
           {
-            [NAME_INDEXED_DB.nameDS.examTypes]: dataExamTypes.items,
-            [NAME_INDEXED_DB.nameDS.diagnoses]: dataDiagnoses.items,
-            [NAME_INDEXED_DB.nameDS.omsCompanies]: dataOmsCompanies.items,
             [NAME_INDEXED_DB.nameDS.staff]: dataStaff.items,
           },
           NAME_INDEXED_DB.version,

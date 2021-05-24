@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Icon } from 'semantic-ui-react'
 import * as R from 'ramda'
 
 import './style.sass'
+import { NavLink } from 'react-router-dom'
 
 type LoginProps = {
   password: string
@@ -42,13 +43,13 @@ const Login = ({
           error={
             errorName
               ? null
-              : { content: 'Пожалуйста, введите имя пользователя', pointing: 'below' }
+              : { content: 'Пожалуйста, введите логин', pointing: 'below' }
           }
           fluid
           id="username"
           onChange={(e: SyntheticEvent, data: any): void => handleChange(e as never, data)}
           value={userName}
-          placeholder="Имя пользователя"
+          placeholder="Логин"
         />
       </Form.Field>
       <Form.Field>
@@ -81,6 +82,12 @@ const Login = ({
           primary
           type="submit"
           disabled={R.isEmpty(password) || R.isEmpty(userName)}
+        />
+        <Button
+          content="Регистрация"
+          primary
+          as={NavLink}
+          to="/registry"
         />
       </Form.Field>
     </Form>

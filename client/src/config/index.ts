@@ -87,10 +87,7 @@ export const NAME_INDEXED_DB = {
   version: 1,
   nameDB: 'WebVetClinic',
   nameDS: {
-    diagnoses: 'diagnoses',
     staff: 'staff',
-    omsCompanies: 'OmsCompanies',
-    examTypes: 'ExamTypes',
   },
 }
 

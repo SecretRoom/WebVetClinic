@@ -7,7 +7,7 @@ export const authA = createAsyncAction(
   AUTH_ERROR,
 )<
   {
-    userName: string,
+    login: string,
     password: string,
   },
   {

@@ -5,16 +5,27 @@ import {
 
 import TestPage from '../modules/TestPage'
 import LoginPage from '../modules/LoginPage/index.tsx'
-import PatientPage from '../modules/PatientPage/index.tsx'
-import ReportsPage from '../modules/ReportsPage/index.tsx'
-import PatientsPage from '../modules/PatientsPage/index.tsx'
-import ScheduleAppointmentPage from '../modules/ScheduleAppointmentPage/index.tsx'
+import UserDataPage from '../modules/UserDataPage/index.tsx'
+import RegistryPage from '../modules/RegistryPage/index.tsx'
 
 const routes = [
+  // {
+  //   title: 'Отчеты',
+  //   path: '/reports',
+  //   component: ReportsPage,
+  //   rights: {
+  //     show: '',
+  //     edit: '',
+  //   },
+  //   profile: 'ALL',
+  //   showNavLink: true,
+  //   isPrivate: false,
+  //   exact: true,
+  // },
   {
-    title: 'Пациенты',
-    path: '/patients',
-    component: PatientsPage,
+    title: 'Личные данные',
+    path: '/user/data',
+    component: UserDataPage,
     rights: {
       show: '',
       edit: '',
@@ -23,45 +34,6 @@ const routes = [
     showNavLink: true,
     isPrivate: false,
     exact: true,
-  },
-  {
-    title: 'График приема',
-    path: '/schedule',
-    component: ScheduleAppointmentPage,
-    rights: {
-      show: '',
-      edit: '',
-    },
-    profile: 'ALL',
-    showNavLink: true,
-    isPrivate: false,
-    exact: true,
-  },
-  {
-    title: 'Отчеты',
-    path: '/reports',
-    component: ReportsPage,
-    rights: {
-      show: '',
-      edit: '',
-    },
-    profile: 'ALL',
-    showNavLink: true,
-    isPrivate: false,
-    exact: true,
-  },
-  {
-    title: '',
-    path: '/patients/:id',
-    component: PatientPage,
-    rights: {
-      show: '',
-      edit: '',
-    },
-    profile: 'ALL',
-    showNavLink: false,
-    isPrivate: false,
-    exact: false,
   },
   {
     title: 'test',
@@ -96,6 +68,19 @@ const routes = [
     title: '',
     path: '/login',
     component: LoginPage,
+    rights: {
+      show: '',
+      edit: '',
+    },
+    profile: 'ALL',
+    showNavLink: false,
+    isPrivate: false,
+    exact: true,
+  },
+  {
+    title: '',
+    path: '/registry',
+    component: RegistryPage,
     rights: {
       show: '',
       edit: '',

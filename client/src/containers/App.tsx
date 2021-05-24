@@ -3,6 +3,7 @@ import React, { Suspense, useEffect } from 'react'
 import {
   Switch, useHistory,
 } from 'react-router-dom'
+import * as R from 'ramda'
 import { setConfig } from 'react-hot-loader'
 import { connect } from 'react-redux'
 import { Dimmer, Loader } from 'semantic-ui-react'
@@ -16,7 +17,7 @@ import Layout from '../components/Blocks/Layout'
 import Spinner from '../components/Common/Spinner'
 import { isAuthenticatedS, isFetchingS } from '../selectors'
 import NavBar from '../components/Blocks/NavBar/index'
-import { getUserDataA } from './UserService/actions'
+import { getUserDataA } from './UserData/actions'
 import { errorDataS, globalErrorS } from './Global/selectors'
 
 setConfig({
@@ -59,8 +60,8 @@ const App = ({
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (history.location.pathname === '/login') {
-        history.push('/patients')
+      if (R.includes(history.location.pathname, ['/login', '/registry'])) {
+        history.push('/user/data')
       } else {
         history.push(history.location.pathname)
       }

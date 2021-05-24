@@ -9,7 +9,7 @@ import { isFetchingAuthS } from './selectors'
 type LoginContainerProps = {
   isFetching: boolean
 
-  auth: ({ userName, password }: { userName: string, password: string }) => void
+  auth: ({ login, password }: { login: string, password: string }) => void
 }
 
 const LoginContainer = ({
@@ -32,7 +32,7 @@ const LoginContainer = ({
     e.preventDefault()
     // authenticated = true
     sessionStorage.setItem('login', userName || '')
-    auth({ userName, password })
+    auth({ login: userName, password })
     // getAppVersion()
   }
 

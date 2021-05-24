@@ -3,6 +3,7 @@ const { Router } = require('express')
 const bcrypt = require('bcryptjs')
 const { check, validationResult } = require('express-validator')
 const config = require('config')
+const R = require('ramda');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User')
 
@@ -13,8 +14,14 @@ const router = Router()
 router.post(
   '/register',
   [
-    check('password', 'Минимальная длина пароля 1 символов')
-      .isLength({ min: 1 })
+    check('password', 'Минимальная длина пароля 1 символов').notEmpty(),
+    check('surname').notEmpty(),
+    check('name').notEmpty(),
+    check('birthday').notEmpty(),
+    check('sex').notEmpty(),
+    check('phone', 'Длина = 11, начало c 8')
+      .isLength({ min: 11, max: 11 })
+      .custom((value) => (R.startsWith('8', value) && R.isNil(value.match(/\D/))))
   ],
   async (req, res) => {
     try {
@@ -28,8 +35,16 @@ router.post(
         })
       }
 
-      const { userName, password } = req.body
-      const findUser = await User.findOne({ userName })
+      const {
+        password,
+        surname,
+        name,
+        birthday,
+        sex,
+        phone,
+      } = req.body
+
+      const findUser = await User.findOne({ phone })
 
       if (findUser) {
         return res.status(400).json({ status: '1', message: 'Такой пользователь уже существует' })
@@ -40,11 +55,20 @@ router.post(
         hashedPassword = r
       })
 
-      const newUser = new User({ userName, password: hashedPassword })
+      const newUser = new User({
+        sex,
+        name,
+        phone,
+        surname,
+        birthday,
+        password: hashedPassword,
+        fullName: `${surname} ${name}`,
+        shortName: `${surname} ${name[0]}.`,
+      })
 
       await newUser.save()
 
-      res.status(201).json({ status: '2', message: 'Пользователь создан' })
+      res.status(201).json({ status: '0', message: 'Пользователь создан' })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
     }
@@ -55,7 +79,7 @@ router.post(
 router.post(
   '/login',
   [
-    check('userName', 'Введите логин').exists(),
+    check('login', 'Введите логин').exists(),
     check('password', 'Введите пароль').exists(),
   ],
   async (req, res) => {
@@ -69,8 +93,8 @@ router.post(
         })
       }
 
-      const { userName, password } = req.body
-      const user = await User.findOne({ userName })
+      const { login, password } = req.body
+      const user = await User.findOne({ phone: login })
 
       if (!user) {
         return res.status(400).json({ status: '1', message: 'Ошибка входа' })
