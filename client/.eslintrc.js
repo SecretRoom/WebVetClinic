@@ -9,6 +9,8 @@ module.exports = {
   ],
   parser: 'babel-eslint',
   parserOptions: {
+    project: 'tsconfig.json',
+    tsconfigRootDir: __dirname,
     ecmaFeatures: {
       classes: true,
       jsx: true,

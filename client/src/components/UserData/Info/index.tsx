@@ -7,14 +7,11 @@ import './style.sass'
 
 type UserInfoProps = {
   sex: string
-  oms: string
   name: string
   email: string
-  snils: string
   phone: string
   surname: string
   patronymic: string
-  omsCompany: string
 
   birthday: Date | null
 
@@ -23,45 +20,31 @@ type UserInfoProps = {
   isDisInput: boolean
   isFetching: boolean
 
-  tickets: any[]
-  analyzes: any[]
-  omsCompanyList: any[]
-
   handleClickEdit: () => void
   handleClickSave: () => void
   handleClickReset: () => void
   handleClickCancel: () => void
-  createCardGroupTickets: (list: any[]) => ReactElement
-  createCardGroupAnalyzes: (list: any[]) => ReactElement
   handleChangeInputs: (e: SyntheticEvent, field: string, { value }: any) => void
 }
 
 const UserInfo = ({
-  oms,
   sex,
   name,
   email,
-  snils,
   phone,
   isIdent,
   surname,
   isError,
-  tickets,
   birthday,
-  analyzes,
   isDisInput,
   patronymic,
-  omsCompany,
   isFetching,
-  omsCompanyList,
 
   handleClickSave,
   handleClickEdit,
   handleClickReset,
   handleClickCancel,
   handleChangeInputs,
-  createCardGroupTickets,
-  createCardGroupAnalyzes,
 }: UserInfoProps): ReactElement => (
   <>
     {isFetching ? (
@@ -176,42 +159,6 @@ const UserInfo = ({
             </div>
           </div>
           <div className="fields-any">
-            <div className={R.isEmpty(snils) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(snils) && <span>СНИЛС</span>}
-              <Input
-                transparent
-                value={snils}
-                error={R.isEmpty(snils)}
-                placeholder="СНИЛС"
-                disabled={isFetching || isDisInput}
-                onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'snils', value)}
-              />
-            </div>
-            <div className={R.isEmpty(oms) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(oms) && <span>ОМС</span>}
-              <Input
-                transparent
-                value={oms}
-                error={R.isEmpty(oms)}
-                placeholder="ОМС"
-                disabled={isFetching || isDisInput}
-                onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'oms', value)}
-              />
-            </div>
-            <div className={R.isEmpty(omsCompany) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(omsCompany) && <span>Страховая компания</span>}
-              <Dropdown
-                basic
-                compact
-                value={omsCompany}
-                selectOnBlur={false}
-                disabled={isFetching || isDisInput}
-                options={omsCompanyList}
-                selectOnNavigation={false}
-                placeholder="Страховая компания"
-                onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'omsCompany', value)}
-              />
-            </div>
             {isDisInput ? (
               <Button
                 icon="edit"
@@ -253,10 +200,6 @@ const UserInfo = ({
             )}
           </div>
         </Segment>
-        <div className="patient-moreData">
-          {createCardGroupTickets(tickets)}
-          {createCardGroupAnalyzes(analyzes)}
-        </div>
       </div>
     )}
   </>
