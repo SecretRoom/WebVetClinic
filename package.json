@@ -18,7 +18,7 @@
     "react",
     "node"
   ],
-  "author": "Babaev Nikolay <nikolas270699@gmail.com>",
+  "author": "Babaeva Valeri <valeri110416@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/SecretRoom/WebVetClinic/issues"
@@ -29,6 +29,7 @@
     "config": "^3.3.6",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "express-http-proxy": "^1.6.2",
     "express-validator": "^6.10.0",
     "file-system": "^2.2.2",
     "fs": "*",
