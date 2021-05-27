@@ -3,9 +3,7 @@ import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
 import moment from 'moment'
-import { Button, Segment } from 'semantic-ui-react'
 import UserInfo from '../../../components/UserData/Info'
-import getStore from '../../../services/IndexedDB/getStore'
 
 import {
   surnameS,
@@ -15,7 +13,9 @@ import {
   sexS,
   phoneS,
   emailS,
+  isFetchingS,
 } from '../selectors'
+import { updateUserDataA } from '../actions'
 
 type UserInfoContainerProps = {
   sexDef: string
@@ -26,6 +26,9 @@ type UserInfoContainerProps = {
   birthdayDef: string
   patronymicDef: string
 
+  isFetching: boolean
+
+  updateUserData: (data: any) => void
 }
 
 const UserInfoContainer = ({
@@ -34,8 +37,11 @@ const UserInfoContainer = ({
   phoneDef,
   emailDef,
   surnameDef,
+  isFetching,
   birthdayDef,
   patronymicDef,
+
+  updateUserData,
 }: UserInfoContainerProps): ReactElement => {
   const [sex, setSex] = useState<string>('')
   const [name, setName] = useState<string>('')
@@ -81,18 +87,15 @@ const UserInfoContainer = ({
   const handleClickEdit = (): void => setIsDisInput(prev => !prev)
 
   const handleClickSave = (): void => {
-    // updateUser({
-    //   oms,
-    //   sex,
-    //   name,
-    //   phone,
-    //   email,
-    //   snils,
-    //   surname,
-    //   omsCompany,
-    //   patronymic,
-    //   birthday: moment(birthday).format('YYYY.MM.DD'),
-    // })
+    updateUserData({
+      sex,
+      name,
+      phone,
+      email,
+      surname,
+      patronymic,
+      birthday: moment(birthday).format('YYYY.MM.DD'),
+    })
     setIsDisInput(prev => !prev)
   }
 
@@ -115,50 +118,44 @@ const UserInfoContainer = ({
   }
 
   useEffect(() => {
-    // const propIdent = (): boolean => {
-    //   const obj = R.whereEq(patientInfo)
-    //   return obj({
-    //     oms,
-    //     sex,
-    //     name,
-    //     phone,
-    //     idPat,
-    //     email,
-    //     snils,
-    //     surname,
-    //     omsCompany,
-    //     patronymic,
-    //     birthday: R.isNil(birthday) ? '' : moment(birthday).format('YYYY.MM.DD'),
-    //   })
-    // }
-    // if (
-    //   R.isEmpty(oms)
-    //   || R.isEmpty(name)
-    //   || R.isEmpty(phone)
-    //   || R.isEmpty(email)
-    //   || R.isEmpty(snils)
-    //   || R.isEmpty(surname)
-    //   || R.isEmpty(patronymic)
-    //   || oms.length < 16
-    //   || phone.length < 11
-    //   || snils.length < 11
-    //   || R.isNil(email.match(/\w+@[a-z]+\.[a-z]+/i))
-    // ) {
-    //   setIsError(true)
-    // } else setIsError(false)
-    // setIsIdent(propIdent())
+    const propIdent = (): boolean => {
+      const obj = R.whereEq({
+        sex: sexDef,
+        name: nameDef,
+        phone: phoneDef,
+        email: emailDef,
+        surname: surnameDef,
+        patronymic: patronymicDef,
+        birthday: R.isNil(birthdayDef) ? '' : moment(birthdayDef).format('YYYY.MM.DD'),
+      })
+      return obj({
+        sex,
+        name,
+        phone,
+        email,
+        surname,
+        patronymic,
+        birthday: R.isNil(birthday) ? '' : moment(birthday).format('YYYY.MM.DD'),
+      })
+    }
+    if (
+      R.isEmpty(name)
+      || R.isEmpty(phone)
+      || R.isEmpty(patronymic)
+      || phone.length < 11
+      || (email ? R.isNil(email.match(/\w+@[a-z]+\.[a-z]+/i)) : false)
+    ) {
+      setIsError(true)
+    } else setIsError(false)
+    setIsIdent(propIdent())
   }, [
-    // oms,
-    // sex,
-    // name,
-    // phone,
-    // idPat,
-    // email,
-    // snils,
-    // surname,
-    // omsCompany,
-    // patronymic,
-    // birthday,
+    sex,
+    name,
+    phone,
+    email,
+    surname,
+    patronymic,
+    birthday,
   ])
 
   useEffect(() => {
@@ -183,7 +180,7 @@ const UserInfoContainer = ({
       birthday={birthday}
       isDisInput={isDisInput}
       patronymic={patronymic}
-      isFetching={false}
+      isFetching={isFetching}
       handleClickSave={handleClickSave}
       handleClickEdit={handleClickEdit}
       handleClickReset={handleClickReset}
@@ -201,8 +198,10 @@ export default connect(
     emailDef: emailS(state),
     surnameDef: surnameS(state),
     birthdayDef: birthdayS(state),
+    isFetching: isFetchingS(state),
     patronymicDef: patronymicS(state),
   }),
   {
+    updateUserData: updateUserDataA.request,
   },
 )(UserInfoContainer)

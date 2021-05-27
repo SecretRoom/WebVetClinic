@@ -2,5 +2,5 @@
   "port": 5000,
   "mongoURI": "mongodb+srv://wv-dev:1104@webvetclinicdb.b3lyz.mongodb.net/WebVetClinicDB?retryWrites=true&w=majority",
   "jwtSecret": "WebVetClinic",
-  "dirPath": "/var/www/Курсач/webVetClinic/photos"
+  "dirPath": "/photos"
 }

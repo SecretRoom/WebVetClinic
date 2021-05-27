@@ -21,7 +21,8 @@ export default function reducer(
     }
     case getType(getPetsA.success): {
       return state
-        .set('idEmpl', action.payload)
+        .set('pets', action.payload)
+        .set('isFetching', false)
     }
     case getType(getPetsA.failure): {
       return state

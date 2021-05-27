@@ -24,7 +24,7 @@ router.post(
         return res.status(400).json({
           errors: errors.array(),
           status: '1',
-          message: 'Некорректные данные при создании',
+          message: 'Некорректные данные при запросе',
         })
       }
 

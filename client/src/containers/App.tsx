@@ -15,7 +15,7 @@ import Notification from './Blocks/Notification'
 import GlobalError from '../components/Blocks/GlobalError'
 import Layout from '../components/Blocks/Layout'
 import Spinner from '../components/Common/Spinner'
-import { isAuthenticatedS, isFetchingS } from '../selectors'
+import { fullNameS, isAuthenticatedS, isFetchingS } from '../selectors'
 import NavBar from '../components/Blocks/NavBar/index'
 import { getUserDataA } from './UserData/actions'
 import { errorDataS, globalErrorS } from './Global/selectors'
@@ -25,6 +25,8 @@ setConfig({
 });
 
 type AppProps = {
+  fullName: string
+
   globalError: boolean
   isAuthenticated: boolean
   isFetchingUserData: boolean
@@ -35,6 +37,7 @@ type AppProps = {
 }
 
 const App = ({
+  fullName,
   errorData,
   getUserData,
   globalError,
@@ -70,13 +73,14 @@ const App = ({
     }
   }, [isAuthenticated])
 
-  if (isFetchingUserData) {
+  if (isFetchingUserData && R.isEmpty(fullName)) {
     return (
       <Dimmer active inverted>
         <Loader size="massive" inverted content="Загрузка" />
       </Dimmer>
     )
   }
+
   return (
     <>
       {isAuthenticated && (
@@ -103,6 +107,7 @@ export default connect(
     isAuthenticated: isAuthenticatedS(state),
     globalError: globalErrorS(state),
     errorData: errorDataS(state),
+    fullName: fullNameS(state),
     isFetchingUserData: isFetchingS(state),
   }),
   {

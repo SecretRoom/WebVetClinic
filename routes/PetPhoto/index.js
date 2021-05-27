@@ -5,6 +5,7 @@ const fs = require('file-system');
 const moment = require('moment')
 const { check, validationResult } = require('express-validator')
 const config = require('config')
+const path = require('path');
 
 const PetPhoto = require('../../models/PetPhoto')
 
@@ -88,10 +89,20 @@ router.post(
       if (R.isEmpty(petID) || R.isNil(petID)) {
         findPetPhoto = await PetPhoto.find({ userID })
       } else {
-        findPetPhoto = await PetPhoto.find({ petID })
+        findPetPhoto = await PetPhoto.findOne({ petID })
       }
 
-      res.status(200).json({ status: '0', items: findPetPhoto })
+      function writeFile(path, data) {
+        return new Promise((resolve) => {
+            fs.writeFile(path, data, resolve);
+        });
+      }
+
+      fs.createReadStream(findPetPhoto.path).pipe(res);
+
+
+
+      // res.status(200).json({ status: '0', items: findPetPhoto })
 
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })

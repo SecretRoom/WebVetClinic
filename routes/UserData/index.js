@@ -72,26 +72,37 @@ router.post(
     }
   })
 
-// // /patients
-// router.post(
-//   '',
-//   async (req, res) => {
-//     try {
-//       let findData = {}
-//       R.forEachObjIndexed((value, key) => {
-//         if (!R.isNil(value)) {
-//           findData = R.mergeAll([findData, { [key]: new RegExp(value, 'i') }])
-//         }
-//       }, req.body)
-//       const findPatient = R.isEmpty(req.body)
-//         ? await Patient.find().sort({ surname: 1 })
-//         : await Patient.find(findData).sort({ surname: 1 })
+// /userData/update
+router.post(
+  '/update',
+  async (req, res) => {
+    try {
+      const {
+        userID,
+        surname,
+        name,
+        patronymic,
+        birthday,
+        sex,
+        phone,
+        email,
+      } = req.body
 
-//       res.status(200).json({ status: '0', items: findPatient })
+      await User.findByIdAndUpdate(userID,{        
+        surname,
+        name,
+        patronymic,
+        birthday,
+        sex,
+        phone,
+        email,
+      })
 
-//     } catch (e) {
-//       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
-//     }
-//   })
+      return res.status(200).json({ status: '0', message: 'Данные обновлены' })
+
+    } catch (e) {
+      res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
+    }
+  })
 
 module.exports = router

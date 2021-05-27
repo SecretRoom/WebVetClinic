@@ -1,114 +1,57 @@
 @import '../../../style/_constants'
 
-.patient-info__content
+.user-info__content
   display: grid
-  grid-gap: 10px
   margin: 5px 10px
   height: 92vh
   grid-template-columns: max-content 1fr
   .ui.segment
     margin: 0 !important
-  .patient-data
+  .user-data
     display: grid !important
-    grid-template-rows: repeat(3,max-content)
+    grid-template-columns: repeat(2,max-content)
+    grid-template-rows: repeat(auto-fit, 40px)
     grid-gap: 10px
     height: 100%
-    border: solid 2px $second_color !important
-    box-shadow: 0px 0px 4px 1px $second_color !important
     overflow-y: auto
-    .fields__image-input
+    .field
       display: grid
-      grid-template-columns: repeat(2,1fr)
-      grid-gap: 20px
-      .fields
-        display: grid
-        grid-gap: 10px
-        grid-template-rows: repeat(3, max-content)
-        grid-template-columns: 1fr
-        .field
-          display: grid
-          align-items: end
-          grid-template-rows: repeat(2,max-content)
-          border-bottom: 1px solid #a2a2a2 !important
-          input
-            width: 140px
-            margin-left: 5px
-            height: 20px
-          span
-            color: $main_dark_color
-            font-weight: bold
-            font-size: small
-        .field-empty
-          display: grid
-          align-items: end
-          height: 40px
-          border-bottom: 1px solid #a2a2a2 !important
-          input
-            width: 140px
-            height: 30px
-    .fields
+      height: max-content
+      align-items: end
+      grid-template-rows: repeat(2,max-content)
+      border-bottom: 1px solid #a2a2a2 !important
+      .ui.dropdown
+        margin-left: 5px
+      input
+        width: 140px
+        margin-left: 5px
+        height: 20px
+      span
+        color: $second_dark_color
+        font-weight: bold
+        font-size: small
+    .field-empty
       display: grid
-      grid-template-columns: repeat(2,1fr)
-      grid-gap: 10px
-      .field
-        display: grid
-        align-items: end
-        grid-template-rows: repeat(2,max-content)
-        border-bottom: 1px solid #a2a2a2 !important
-        input
-          width: 140px
-          margin-left: 5px
-          height: 20px
-        span
-          color: $main_dark_color
-          font-weight: bold
-          font-size: small
-      .field-empty
-        display: grid
-        align-items: end
-        height: 40px
-        border-bottom: 1px solid #a2a2a2 !important
-        input
-          width: 140px
-          height: 30px
-    .fields-any
+      align-items: end
+      height: 40px
+      border-bottom: 1px solid #a2a2a2 !important
+      input
+        width: 140px
+        height: 30px
+    &__button
+      height: 40px
+      border-radius: 5px
+    &__buttons-group
       display: grid
-      grid-template-columns: repeat(2,1fr)
-      grid-gap: 10px
-      .field
-        display: grid
-        align-items: end
-        grid-template-rows: repeat(2,max-content)
-        border-bottom: 1px solid #a2a2a2 !important
-        input
-          height: 20px
-          margin-left: 5px
-          width: max-content
-        span
-          color: $main_dark_color
-          font-weight: bold
-          font-size: small
-      .field-empty
-        display: grid
-        height: 40px
-        align-items: end
-        border-bottom: 1px solid #a2a2a2 !important
-        input
-          width: 140px !important
-          height: 30px
-      &__button
+      grid-gap: 5px
+      grid-template-columns: repeat(3, max-content)
+      align-items: center
+      justify-content: end
+      width: 173px
+      .icon
         border-radius: 5px
-      &__buttons-group
-        display: grid
-        grid-gap: 5px
-        grid-template-columns: repeat(3, max-content)
-        align-items: center
-        justify-content: end
-        width: 173px
-        .icon
-          border-radius: 5px
-          margin: 0
-  .patient-moreData
+        margin: 0
+  .user-moreData
     display: grid
     overflow-y: auto
     grid-gap: 10px

@@ -1,0 +1,91 @@
+@import '../../../style/_constants'
+
+.pets-cards__content
+  display: grid
+  margin: 5px 10px
+  height: 92vh
+  // grid-template-columns: max-content 1fr
+  .ui.segment
+    margin: 0 !important
+  .card
+    display: grid !important
+    width: 300px !important
+    max-width: 300px !important
+    height: max-content !important
+    .pet-photo
+      max-height: 400px
+      max-width: 300px
+      width: 300px
+    .fields
+      padding: 10px
+      grid-gap: 10px
+      width: 300px
+      display: grid
+      .field
+        display: grid
+        height: max-content
+        width: max-content
+        align-items: end
+        grid-template-rows: repeat(2,max-content)
+        border-bottom: 1px solid #a2a2a2 !important
+        .ui.dropdown
+          margin-left: 5px
+        input
+          width: 130px
+          margin-left: 5px
+          height: 20px            
+        span
+          color: $second_dark_color
+          font-weight: bold
+          font-size: small
+      .field-empty
+        display: grid
+        align-items: end
+        height: 40px
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          width: 130px
+          height: 30px
+      &__button
+        height: 40px
+        border-radius: 5px
+      &__buttons-group
+        display: grid
+        grid-gap: 5px
+        grid-template-columns: repeat(3, max-content)
+        align-items: center
+        justify-content: end
+        width: 173px
+        .icon
+          border-radius: 5px
+          margin: 0
+  .add-button
+    position: absolute
+    bottom: 5vh
+    right: 5vh
+.pet-modal
+  .field
+    display: grid
+    height: max-content
+    width: max-content
+    align-items: end
+    grid-template-rows: repeat(2,max-content)
+    border-bottom: 1px solid #a2a2a2 !important
+    .ui.dropdown
+      margin-left: 5px
+    input
+      width: 130px
+      margin-left: 5px
+      height: 20px            
+    span
+      color: $second_dark_color
+      font-weight: bold
+      font-size: small
+  .field-empty
+    display: grid
+    align-items: end
+    height: 40px
+    border-bottom: 1px solid #a2a2a2 !important
+    input
+      width: 130px
+      height: 30px
