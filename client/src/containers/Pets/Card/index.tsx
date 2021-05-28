@@ -8,18 +8,22 @@ import DatePicker from 'react-datepicker';
 import { Button, Dropdown, Image, Input, Segment } from 'semantic-ui-react'
 import PetsCard from '../../../components/Pets/Card'
 import { isFetchingPetsS, petsS } from '../selectors'
-import PetsAPI from '../../../services/API/Pets'
+import { createPetA } from '../actions';
 
 type PetsCardContainerProps = {
   isFetching: boolean
 
   pets: any[]
+
+  createPet: (data: any) => void
 }
 
 const PetsCardContainer = ({
   pets,
   isFetching,
-}:PetsCardContainerProps): ReactElement => {
+
+  createPet,
+}: PetsCardContainerProps): ReactElement => {
   const [sex, setSex] = useState<string>('')
   const [type, setType] = useState<string>('')
   const [color, setColor] = useState<string>('')
@@ -29,12 +33,12 @@ const PetsCardContainer = ({
 
   const [birthday, setBirthday] = useState<Date | null>(null)
 
-  const [photo, setPhoto] = useState<File | undefined>()
+  const [photo, setPhoto] = useState<File>()
 
   const [isError, setIsError] = useState<boolean>(false)
   const [isIdent, setIsIdent] = useState<boolean>(false)
-  const [isDisInput, setIsDisInput] = useState<boolean>(true)
-  const [openModal, setOpenModal] = useState<boolean>(true)
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [isDisSaveButton, setIsDisSaveButton] = useState<boolean>(true)
 
   const handleChangeInputs = (e: SyntheticEvent, field: string, value: any): void => {
     switch (field) {
@@ -64,21 +68,20 @@ const PetsCardContainer = ({
     }
   }
 
-  const handleChangeOpenModal = ():void => setOpenModal(prev => !prev)
-
-  const handleClickEdit = (): void => setIsDisInput(prev => !prev)
+  const handleChangeOpenModal = (): void => setOpenModal(prev => !prev)
 
   const handleClickSave = (): void => {
-    // updateUserData({
-    //   sex,
-    //   name,
-    //   phone,
-    //   email,
-    //   surname,
-    //   patronymic,
-    //   birthday: moment(birthday).format('YYYY.MM.DD'),
-    // })
-    setIsDisInput(prev => !prev)
+    createPet({
+      sex,
+      type,
+      color,
+      file: photo,
+      weight,
+      height,
+      nickname,
+      birthday,
+    })
+    handleChangeOpenModal()
   }
 
   const handleClickReset = (): void => {
@@ -96,34 +99,11 @@ const PetsCardContainer = ({
 
   const handleClickCancel = (): void => {
     handleClickReset()
-    setIsDisInput(prev => !prev)
   }
 
-  const handleCreateCard = (pet: any):ReactElement => {
-    const imageSrc = async () => {
-      const res = await fetch('/pets/photos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userID: pet.userID, petID: pet._id }),
-      })
-      const buffer = await res.arrayBuffer()
-      const bytes = new Uint8Array(buffer)
-      const blob = new Blob([bytes.buffer]);
-
-      const image = document.getElementById(`image__${pet._id}`) as HTMLInputElement
-      const reader = new FileReader();
-
-      reader.addEventListener('load', ({ target }) => {
-        if (!R.isNil(target)) image.src = String(target.result);
-      });
-
-      reader.readAsDataURL(blob);
-    }
-    imageSrc()
+  const handleCreateCard = (pet: any): ReactElement => {
     return (
-      <Segment className="card">
+      <Segment className="card" key={Math.random()}>
         <Image id={`image__${pet._id}`} src="" alt="" className="pet-photo" />
         <div className="fields">
           <div
@@ -236,6 +216,27 @@ const PetsCardContainer = ({
     )
   }
 
+  const handleChangePhoto = (e: any): void => {
+    if (e.target.files.length) {
+      setPhoto(e.target.files[0])
+      const imageSrc = async () => {
+        const buffer = await e.target.files[0].arrayBuffer()
+        const bytes = new Uint8Array(buffer)
+        const blob = new Blob([bytes.buffer]);
+
+        const image = document.getElementById('upload-photo') as HTMLInputElement
+        const reader = new FileReader();
+
+        reader.addEventListener('load', ({ target }) => {
+          if (!R.isNil(target)) image.src = String(target.result);
+        });
+
+        reader.readAsDataURL(blob);
+      }
+      imageSrc()
+    }
+  }
+
   useEffect(() => {
     if (!openModal) {
       setSex('')
@@ -270,25 +271,58 @@ const PetsCardContainer = ({
     //     birthday: R.isNil(birthday) ? '' : moment(birthday).format('YYYY.MM.DD'),
     //   })
     // }
-    // if (
-    //   R.isEmpty(name)
-    //   || R.isEmpty(phone)
-    //   || R.isEmpty(patronymic)
-    //   || phone.length < 11
-    //   || (email ? R.isNil(email.match(/\w+@[a-z]+\.[a-z]+/i)) : false)
-    // ) {
-    //   setIsError(true)
-    // } else setIsError(false)
+    if (
+      R.isEmpty(sex)
+      || R.isNil(photo)
+      || R.isEmpty(type)
+      || R.isEmpty(color)
+      || R.isEmpty(weight)
+      || R.isEmpty(height)
+      || R.isNil(birthday)
+      || R.isEmpty(nickname)
+    ) {
+      setIsDisSaveButton(true)
+    } else setIsDisSaveButton(false)
     // setIsIdent(propIdent())
   }, [
-    // sex,
-    // name,
-    // phone,
-    // email,
-    // surname,
-    // patronymic,
-    // birthday,
+    sex,
+    type,
+    color,
+    photo,
+    weight,
+    height,
+    nickname,
+    birthday,
   ])
+
+  useEffect(() => {
+    if (!openModal) {
+      R.forEach((pet: any) => {
+        const imageSrc = async () => {
+          const res = await fetch('/pets/photos', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userID: pet.userID, petID: pet._id }),
+          })
+          const buffer = await res.arrayBuffer()
+          const bytes = new Uint8Array(buffer)
+          const blob = new Blob([bytes.buffer]);
+
+          const image = document.getElementById(`image__${pet._id}`) as HTMLInputElement
+          const reader = new FileReader();
+
+          reader.addEventListener('load', ({ target }) => {
+            if (!R.isNil(target)) image.src = String(target.result);
+          });
+
+          reader.readAsDataURL(blob);
+        }
+        imageSrc()
+      }, pets)
+    }
+  }, [pets, openModal])
 
   return (
     <PetsCard
@@ -303,7 +337,10 @@ const PetsCardContainer = ({
       birthday={birthday}
       openModal={openModal}
       isFetching={isFetching}
+      isDisSaveButton={isDisSaveButton}
+      handleClickSave={handleClickSave}
       handleCreateCard={handleCreateCard}
+      handleChangePhoto={handleChangePhoto}
       handleChangeInputs={handleChangeInputs}
       handleChangeOpenModal={handleChangeOpenModal}
     />
@@ -316,5 +353,6 @@ export default connect(
     isFetching: isFetchingPetsS(state),
   }),
   {
+    createPet: createPetA.request,
   },
 )(PetsCardContainer)

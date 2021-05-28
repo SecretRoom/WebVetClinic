@@ -77,7 +77,7 @@ router.post(
 
       await newPet.save()
 
-      res.status(200).json({ status: '0', message: 'Питомец добавлен' })
+      res.status(200).json({ status: '0', message: 'Питомец добавлен', id: newPet._id })
 
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })

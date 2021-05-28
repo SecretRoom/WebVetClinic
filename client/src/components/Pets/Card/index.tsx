@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
-import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal } from 'semantic-ui-react'
+import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal, Label } from 'semantic-ui-react'
 import DatePicker from 'react-datepicker';
 import * as R from 'ramda'
 import './style.sass'
@@ -15,6 +16,7 @@ type PetsCardProps = {
 
   openModal: boolean
   isFetching: boolean
+  isDisSaveButton: boolean
 
   photo: File | undefined
 
@@ -22,8 +24,10 @@ type PetsCardProps = {
 
   pets: any[]
 
+  handleClickSave: () => void
   handleChangeOpenModal: () => void
   handleCreateCard: (card: any) => ReactElement
+  handleChangePhoto: (e: SyntheticEvent) => void
   handleChangeInputs: (e: SyntheticEvent, field: string, { value }: any) => void
 }
 
@@ -39,8 +43,11 @@ const PetsCard = ({
   birthday,
   openModal,
   isFetching,
+  isDisSaveButton,
 
+  handleClickSave,
   handleCreateCard,
+  handleChangePhoto,
   handleChangeInputs,
   handleChangeOpenModal,
 }: PetsCardProps): ReactElement => (
@@ -53,29 +60,56 @@ const PetsCard = ({
       <div className="pets-cards__content">
         {R.map(handleCreateCard, pets)}
         <Modal
+          size="tiny"
           open={openModal}
           className="pet-modal"
           onClose={handleChangeOpenModal}
           trigger={(
-            <Icon
-              link
-              inverted
-              circular
-              size="big"
-              name="plus"
+            <Button
+              animated
               color="orange"
               className="add-button"
               onClick={handleChangeOpenModal}
-            />
+            >
+              <Button.Content
+                hidden
+                color="orange"
+              >
+                <span>Добавить питомца</span>
+              </Button.Content>
+              <Button.Content
+                visible
+              >
+                <Icon
+                  name="plus"
+                  size="big"
+                />
+              </Button.Content>
+            </Button>
           )}
         >
           <Modal.Header content="Добавление питомца" />
           <Modal.Content content={(
             <>
-              <div className="download-photo">
-                <Image />
-                <Button />
-              </div>
+              {R.isNil(photo) ? (
+                <>
+                  <label htmlFor="photo" className="photo-label__upload">
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridGap: '5px',
+                        gridTemplateColumns: 'repeat(2, max-content)',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>Выберите файл</span>
+                      <Icon name="search" size="big" color="grey" />
+                    </div>
+                  </label>
+                </>
+              ) : (
+                <Image scr="" id="upload-photo" />
+              )}
               <div className="fields">
                 <div className={R.isEmpty(nickname) ? 'field-empty' : 'field'}>
                   {!R.isEmpty(nickname) && <span>Кличка</span>}
@@ -98,27 +132,10 @@ const PetsCard = ({
                 <div className={R.isEmpty(color) ? 'field-empty' : 'field'}>
                   {!R.isEmpty(color) && <span>Окрас</span>}
                   <Input
-                    style={{ width: '191px' }}
                     transparent
                     value={color}
                     placeholder="Окрас"
                     onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'color', value)}
-                  />
-                </div>
-                <div className={R.isEmpty(sex) ? 'field-empty' : 'field'}>
-                  {!R.isEmpty(sex) && <span>Пол</span>}
-                  <Dropdown
-                    basic
-                    compact
-                    value={sex}
-                    placeholder="Пол"
-                    selectOnBlur={false}
-                    selectOnNavigation={false}
-                    onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'sex', value)}
-                    options={[
-                    { key: 'м', value: 'м', text: 'мужской' },
-                    { key: 'ж', value: 'ж', text: 'женский' },
-                  ]}
                   />
                 </div>
                 <div className={R.isNil(birthday) ? 'field-empty' : 'field'}>
@@ -131,17 +148,33 @@ const PetsCard = ({
                       <Input
                         transparent
                       />
-                  )}
+                    )}
                     dateFormat="dd.MM.yyyy"
                     placeholderText="Дата рождения"
                     onChange={(date: any, e: SyntheticEvent): void => handleChangeInputs(e as never, 'birthday', date)}
+                  />
+                </div>
+                <div className={R.isEmpty(sex) ? 'field-empty' : 'field'}>
+                  {!R.isEmpty(sex) && <span>Пол</span>}
+                  <Dropdown
+                    basic
+                    fluid
+                    style={{ paddingRight: '5px' }}
+                    value={sex}
+                    placeholder="Пол"
+                    selectOnBlur={false}
+                    selectOnNavigation={false}
+                    onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'sex', value)}
+                    options={[
+                      { key: 'м', value: 'м', text: 'мужской' },
+                      { key: 'ж', value: 'ж', text: 'женский' },
+                    ]}
                   />
                 </div>
                 <div className={R.isEmpty(weight) ? 'field-empty' : 'field'}>
                   {!R.isEmpty(weight) && <span>Вес</span>}
                   <Input
                     transparent
-                    style={{ width: '70px' }}
                     value={weight}
                     placeholder="Вес"
                     onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'weight', value)}
@@ -151,15 +184,44 @@ const PetsCard = ({
                   {!R.isEmpty(height) && <span>Рост</span>}
                   <Input
                     transparent
-                    style={{ width: '70px' }}
                     value={height}
                     placeholder="Рост"
                     onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'height', value)}
                   />
                 </div>
+                <div className="buttons">
+                  <label
+                    htmlFor="photo"
+                    className="upload-other"
+                  >
+                    <Icon
+                      link={!R.isNil(photo)}
+                      size="big"
+                      color="orange"
+                      name="upload"
+                      disabled={R.isNil(photo)}
+                    />
+                  </label>
+                  <Button
+                    label
+                    fluid
+                    positive
+                    icon="save"
+                    content="Сохранить"
+                    disabled={isDisSaveButton}
+                    onClick={(): void => handleClickSave()}
+                  />
+                </div>
+                <Input
+                  id="photo"
+                  type="file"
+                  name="photo"
+                  className="photo"
+                  onChange={(e: any): void => handleChangePhoto(e)}
+                />
               </div>
             </>
-            )}
+          )}
           />
         </Modal>
       </div>

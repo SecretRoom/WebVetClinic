@@ -4,7 +4,8 @@
   display: grid
   margin: 5px 10px
   height: 92vh
-  // grid-template-columns: max-content 1fr
+  grid-gap: 10px
+  grid-template-columns: repeat(auto-fit, 300px)
   .ui.segment
     margin: 0 !important
   .card
@@ -33,7 +34,7 @@
         input
           width: 130px
           margin-left: 5px
-          height: 20px            
+          height: 20px
         span
           color: $second_dark_color
           font-weight: bold
@@ -60,32 +61,96 @@
           border-radius: 5px
           margin: 0
   .add-button
-    position: absolute
-    bottom: 5vh
-    right: 5vh
-.pet-modal
-  .field
-    display: grid
-    height: max-content
-    width: max-content
-    align-items: end
-    grid-template-rows: repeat(2,max-content)
-    border-bottom: 1px solid #a2a2a2 !important
-    .ui.dropdown
-      margin-left: 5px
-    input
-      width: 130px
-      margin-left: 5px
-      height: 20px            
+    width: 70px !important
+    height: 70px !important
+    border-radius: 50% !important
+    position: absolute !important
+    bottom: 5vh !important
+    right: 5vh !important
+    padding: 0 !important
+    -webkit-transition: all .5s ease-in-out !important
+    transition: all .5s ease-in-out !important
+    &:hover
+      width: 150px !important
+      border-radius: 50px !important
+    .content
+      margin: 0 !important
+    .hidden.content
+      top: 25% !important
+    .icon
+      padding: 0 !important
+      margin: 0 !important
     span
-      color: $second_dark_color
-      font-weight: bold
-      font-size: small
-  .field-empty
-    display: grid
-    align-items: end
-    height: 40px
-    border-bottom: 1px solid #a2a2a2 !important
-    input
-      width: 130px
-      height: 30px
+      line-height: 1
+      font-size: 18px !important
+.pet-modal
+  .header
+    background-color: $accent_color !important
+    color: white !important
+    text-align: center
+  .content
+    display: grid !important
+    grid-template-columns: 300px 1fr
+    grid-gap: 10px
+    height: max-content
+    .photo
+      display: none
+      position: absolute
+    .photo-label__upload
+      height: 400px
+      display: grid
+      align-content: center
+      justify-content: center
+      border: 2px dashed #9a9a9a
+      background-color: #f1f1f1
+      text-align: center
+      span
+        color: grey
+        height: max-content
+        font-size: 16px
+    .fields
+      display: grid
+      grid-template-rows: repeat(auto-fit,40px )
+      grid-gap: 10px
+      .field
+        display: grid
+        height: 40px
+        align-items: end
+        grid-template-rows: repeat(2,max-content)
+        border-bottom: 1px solid #a2a2a2 !important
+        .ui.dropdown
+          margin-left: 5px
+        input
+          margin-left: 5px
+          height: 20px
+        span
+          color: $second_dark_color
+          font-weight: bold
+          font-size: small
+      .field-empty
+        display: grid
+        align-items: end
+        height: 40px
+        border-bottom: 1px solid #a2a2a2 !important
+        input
+          height: 30px
+        .ui.dropdown
+          margin-left: 5px
+          span
+            color: $second_dark_color
+            font-weight: bold
+            font-size: small
+      .buttons
+        display: grid
+        padding-left: 5px
+        grid-gap: 10px
+        grid-template-columns: max-content max-content
+        .upload-other
+          display: grid
+          justify-items: center
+          align-items: center
+          i.icon
+            margin: 0 !important
+    #upload-photo
+      max-height: 400px !important
+      max-width: 300px !important

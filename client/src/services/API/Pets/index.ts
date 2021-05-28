@@ -12,6 +12,10 @@ class PetsAPI extends MainAPI {
   async getPetsPhotos(data: any): Promise<Response> {
     return this.getData('/pets/photos', data)
   }
+
+  async createPetPhoto(data: any): Promise<Response> {
+    return this.getData('/pets/photos/upload', data)
+  }
 }
 
 export default new PetsAPI();

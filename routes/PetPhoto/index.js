@@ -92,17 +92,7 @@ router.post(
         findPetPhoto = await PetPhoto.findOne({ petID })
       }
 
-      function writeFile(path, data) {
-        return new Promise((resolve) => {
-            fs.writeFile(path, data, resolve);
-        });
-      }
-
       fs.createReadStream(findPetPhoto.path).pipe(res);
-
-
-
-      // res.status(200).json({ status: '0', items: findPetPhoto })
 
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
