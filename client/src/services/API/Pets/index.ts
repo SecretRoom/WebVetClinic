@@ -9,6 +9,10 @@ class PetsAPI extends MainAPI {
     return this.getData('/pets/create', data)
   }
 
+  async updatePet(data: any): Promise<Response> {
+    return this.getData('/pets/update', data)
+  }
+
   async getPetsPhotos(data: any): Promise<Response> {
     return this.getData('/pets/photos', data)
   }

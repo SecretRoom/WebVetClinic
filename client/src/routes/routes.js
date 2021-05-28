@@ -7,21 +7,22 @@ import TestPage from '../modules/TestPage'
 import LoginPage from '../modules/LoginPage/index.tsx'
 import UserDataPage from '../modules/UserDataPage/index.tsx'
 import RegistryPage from '../modules/RegistryPage/index.tsx'
+import PetsPage from '../modules/PetsPage/index.tsx'
 
 const routes = [
-  // {
-  //   title: 'Отчеты',
-  //   path: '/reports',
-  //   component: ReportsPage,
-  //   rights: {
-  //     show: '',
-  //     edit: '',
-  //   },
-  //   profile: 'ALL',
-  //   showNavLink: true,
-  //   isPrivate: false,
-  //   exact: true,
-  // },
+  {
+    title: 'Питомцы',
+    path: '/pets',
+    component: PetsPage,
+    rights: {
+      show: '',
+      edit: '',
+    },
+    profile: 'ALL',
+    showNavLink: false,
+    isPrivate: false,
+    exact: true,
+  },
   {
     title: 'Личные данные',
     path: '/user/data',

@@ -5,3 +5,11 @@ export const GET_PETS_ERROR = 'get/pets:error'
 export const CREATE_PET_REQUEST = 'create/pet:request'
 export const CREATE_PET_SUCCESS = 'create/pet:success'
 export const CREATE_PET_ERROR = 'create/pet:error'
+
+export const UPDATE_PET_REQUEST = 'update/pet:request'
+export const UPDATE_PET_SUCCESS = 'update/pet:success'
+export const UPDATE_PET_ERROR = 'update/pet:error'
+
+export const SELECT_PET = 'select/pet'
+
+export const RESET_SELECTED_PET = 'reset/selectedPet'

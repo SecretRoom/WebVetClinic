@@ -3,26 +3,30 @@ import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
 import moment from 'moment'
-import DatePicker from 'react-datepicker';
 
 import { Button, Dropdown, Image, Input, Segment } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
 import PetsCard from '../../../components/Pets/Card'
 import { isFetchingPetsS, petsS } from '../selectors'
-import { createPetA } from '../actions';
+import { createPetA, selectPetA, updatePetA } from '../actions';
 
 type PetsCardContainerProps = {
   isFetching: boolean
 
-  pets: any[]
+  petsDef: any[]
 
   createPet: (data: any) => void
+  updatePet: (data: any) => void
+  selectPet: (data: any) => void
 }
 
 const PetsCardContainer = ({
-  pets,
+  petsDef,
   isFetching,
 
   createPet,
+  updatePet,
+  selectPet,
 }: PetsCardContainerProps): ReactElement => {
   const [sex, setSex] = useState<string>('')
   const [type, setType] = useState<string>('')
@@ -35,8 +39,11 @@ const PetsCardContainer = ({
 
   const [photo, setPhoto] = useState<File>()
 
-  const [isError, setIsError] = useState<boolean>(false)
+  const [selectedPet, setSelectedPet] = useState<any>({})
+  const [pets, setPets] = useState<any[]>([])
+
   const [isIdent, setIsIdent] = useState<boolean>(false)
+  const [isEdit, setIsEdit] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [isDisSaveButton, setIsDisSaveButton] = useState<boolean>(true)
 
@@ -71,149 +78,31 @@ const PetsCardContainer = ({
   const handleChangeOpenModal = (): void => setOpenModal(prev => !prev)
 
   const handleClickSave = (): void => {
-    createPet({
-      sex,
-      type,
-      color,
-      file: photo,
-      weight,
-      height,
-      nickname,
-      birthday,
-    })
+    if (isEdit) {
+      updatePet({
+        petID: selectedPet._id,
+        sex,
+        type,
+        color,
+        file: photo,
+        weight,
+        height,
+        nickname,
+        birthday,
+      })
+    } else {
+      createPet({
+        sex,
+        type,
+        color,
+        file: photo,
+        weight,
+        height,
+        nickname,
+        birthday,
+      })
+    }
     handleChangeOpenModal()
-  }
-
-  const handleClickReset = (): void => {
-    // setOms(patientInfo.oms)
-    // setSex(patientInfo.sex)
-    // setName(patientInfo.name)
-    // setPhone(patientInfo.phone)
-    // setEmail(patientInfo.email)
-    // setSnils(patientInfo.snils)
-    // setSurname(patientInfo.surname)
-    // setOmsCompany(patientInfo.omsCompany)
-    // setPatronymic(patientInfo.patronymic)
-    // setBirthday(new Date(patientInfo.birthday) || new Date())
-  }
-
-  const handleClickCancel = (): void => {
-    handleClickReset()
-  }
-
-  const handleCreateCard = (pet: any): ReactElement => {
-    return (
-      <Segment className="card" key={Math.random()}>
-        <Image id={`image__${pet._id}`} src="" alt="" className="pet-photo" />
-        <div className="fields">
-          <div
-            style={{
-              display: 'grid',
-              gridGap: '10px',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            }}
-          >
-            <div className={R.isEmpty(pet.nickname) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.nickname) && <span>Кличка</span>}
-              <Input
-                transparent
-                value={pet.nickname}
-                placeholder="Кличка"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'nickname', value)}
-              />
-            </div>
-            <div className={R.isEmpty(pet.type) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.type) && <span>Вид</span>}
-              <Input
-                transparent
-                value={pet.type}
-                placeholder="Вид"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'type', value)}
-              />
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'grid',
-              gridGap: '10px',
-              gridTemplateColumns: 'repeat(2, max-content)',
-            }}
-          >
-            <div className={R.isEmpty(pet.color) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.color) && <span>Окрас</span>}
-              <Input
-                style={{ width: '191px' }}
-                transparent
-                value={pet.color}
-                placeholder="Окрас"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'color', value)}
-              />
-            </div>
-            <div className={R.isEmpty(pet.sex) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.sex) && <span>Пол</span>}
-              <Dropdown
-                basic
-                compact
-                value={pet.sex}
-                placeholder="Пол"
-                selectOnBlur={false}
-                selectOnNavigation={false}
-                onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'sex', value)}
-                options={[
-                  { key: 'м', value: 'м', text: 'мужской' },
-                  { key: 'ж', value: 'ж', text: 'женский' },
-                ]}
-              />
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'grid',
-              gridGap: '10px',
-              gridTemplateColumns: 'repeat(3, max-content)',
-            }}
-          >
-            <div className={R.isEmpty(pet.birthday) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.birthday) && <span>Дата рождения</span>}
-              <DatePicker
-                closeOnScroll
-                selected={new Date(pet.birthday)}
-                maxDate={new Date()}
-                customInput={(
-                  <Input
-                    style={{ width: '119px' }}
-                    transparent
-                  />
-                )}
-                dateFormat="dd.MM.yyyy"
-                placeholderText="Дата рождения"
-                onChange={(date: any, e: SyntheticEvent): void => handleChangeInputs(e as never, 'birthday', date)}
-              />
-            </div>
-            <div className={R.isEmpty(pet.weight) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.weight) && <span>Вес</span>}
-              <Input
-                transparent
-                style={{ width: '70px' }}
-                value={pet.weight}
-                placeholder="Вес"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'weight', value)}
-              />
-            </div>
-            <div className={R.isEmpty(pet.height) ? 'field-empty' : 'field'}>
-              {!R.isEmpty(pet.height) && <span>Рост</span>}
-              <Input
-                transparent
-                style={{ width: '70px' }}
-                value={pet.height}
-                placeholder="Рост"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeInputs(e as never, 'height', value)}
-              />
-            </div>
-          </div>
-        </div>
-      </Segment>
-    )
   }
 
   const handleChangePhoto = (e: any): void => {
@@ -237,6 +126,94 @@ const PetsCardContainer = ({
     }
   }
 
+  const handleClickEditCard = (pet: any): void => {
+    handleChangeOpenModal()
+    setSex(pet.sex)
+    setIsEdit(true)
+    setType(pet.type)
+    setSelectedPet(pet)
+    setColor(pet.color)
+    setWeight(pet.weight)
+    setHeight(pet.height)
+    setNickname(pet.nickname)
+    setBirthday(new Date(pet.birthday))
+  }
+
+  const handleCreateCard = (pet: any): ReactElement => {
+    return (
+      <Segment
+        raised
+        className="card"
+        key={Math.random()}
+      >
+        <Image
+          as={NavLink}
+          onClick={(): void => selectPet(pet)}
+          to={`/pets/${pet._id}/data`}
+          id={`image__${pet._id}`}
+          src={pet.photoSrc}
+          alt=""
+          className="pet-photo"
+        />
+        <div className="card-data">
+          <div className="fields">
+            <div className="field">
+              <span>Кличка</span>
+              <span>{pet.nickname}</span>
+            </div>
+            <div className="field">
+              <span>Вид</span>
+              <span>{pet.type}</span>
+            </div>
+            <div className="field">
+              <span>Окрас</span>
+              <span>{pet.color}</span>
+            </div>
+            <div className="field">
+              <span>Пол</span>
+              <span>{pet.sex === 'м' ? 'Мужской' : 'Женский' }</span>
+            </div>
+            <div className="field">
+              <span>Дата рождения</span>
+              <span>{moment(pet.birthday).format('DD.MM.YYYY').toString()}</span>
+            </div>
+            <div
+              style={{
+              display: 'grid',
+              gridColumnGap: '5px',
+              width: 'max-content',
+              height: 'max-content',
+              gridTemplateColumns: 'repeat(2, max-content)',
+              alignItems: 'center',
+            }}
+            >
+              <div
+                className="field"
+                style={{ width: '82px' }}
+              >
+                <span>Вес</span>
+                <span>{pet.weight}</span>
+              </div>
+              <div
+                className="field"
+                style={{ width: '82px' }}
+              >
+                <span>Рост</span>
+                <span>{pet.height}</span>
+              </div>
+            </div>
+          </div>
+          <Button
+            color="orange"
+            content="Редактировать"
+            className="button-edit"
+            onClick={(): void => handleClickEditCard(pet)}
+          />
+        </div>
+      </Segment>
+    )
+  }
+
   useEffect(() => {
     if (!openModal) {
       setSex('')
@@ -245,50 +222,68 @@ const PetsCardContainer = ({
       setWeight('')
       setHeight('')
       setNickname('')
+      setIsEdit(false)
       setBirthday(null)
+      setSelectedPet({})
       setPhoto(undefined)
     }
   }, [openModal])
 
   useEffect(() => {
-    // const propIdent = (): boolean => {
-    //   const obj = R.whereEq({
-    //     sex: sexDef,
-    //     name: nameDef,
-    //     phone: phoneDef,
-    //     email: emailDef,
-    //     surname: surnameDef,
-    //     patronymic: patronymicDef,
-    //     birthday: R.isNil(birthdayDef) ? '' : moment(birthdayDef).format('YYYY.MM.DD'),
-    //   })
-    //   return obj({
-    //     sex,
-    //     name,
-    //     phone,
-    //     email,
-    //     surname,
-    //     patronymic,
-    //     birthday: R.isNil(birthday) ? '' : moment(birthday).format('YYYY.MM.DD'),
-    //   })
-    // }
-    if (
-      R.isEmpty(sex)
-      || R.isNil(photo)
-      || R.isEmpty(type)
-      || R.isEmpty(color)
-      || R.isEmpty(weight)
-      || R.isEmpty(height)
-      || R.isNil(birthday)
-      || R.isEmpty(nickname)
-    ) {
-      setIsDisSaveButton(true)
-    } else setIsDisSaveButton(false)
-    // setIsIdent(propIdent())
+    const propIdent = (): boolean => {
+      const obj = R.whereEq({
+        sex: selectedPet.sex,
+        type: selectedPet.type,
+        color: selectedPet.color,
+        weight: selectedPet.weight,
+        height: selectedPet.height,
+        nickname: selectedPet.nickname,
+        birthday: moment(selectedPet.birthday).format('YYYY.MM.DD'),
+      })
+      return obj({
+        sex,
+        type,
+        color,
+        weight,
+        height,
+        nickname,
+        birthday: R.isNil(birthday) ? '' : moment(birthday).format('YYYY.MM.DD'),
+      })
+    }
+    if (!isEdit) {
+      if (
+        R.isEmpty(sex)
+        || R.isNil(photo)
+        || R.isEmpty(type)
+        || R.isEmpty(color)
+        || R.isEmpty(weight)
+        || R.isEmpty(height)
+        || R.isNil(birthday)
+        || R.isEmpty(nickname)
+      ) {
+        setIsDisSaveButton(true)
+      } else setIsDisSaveButton(false)
+      setIsIdent(false)
+    } else {
+      if (
+        R.isEmpty(sex)
+        || R.isEmpty(type)
+        || R.isEmpty(color)
+        || R.isEmpty(weight)
+        || R.isEmpty(height)
+        || R.isNil(birthday)
+        || R.isEmpty(nickname)
+      ) {
+        setIsDisSaveButton(true)
+      } else setIsDisSaveButton(false)
+      setIsIdent(propIdent)
+    }
   }, [
     sex,
     type,
     color,
     photo,
+    isEdit,
     weight,
     height,
     nickname,
@@ -296,33 +291,45 @@ const PetsCardContainer = ({
   ])
 
   useEffect(() => {
-    if (!openModal) {
-      R.forEach((pet: any) => {
-        const imageSrc = async () => {
+    if (isEdit && openModal && selectedPet) {
+        const image = document.getElementById('upload-photo') as HTMLInputElement
+        image.src = selectedPet.photoSrc
+    }
+  }, [isEdit, openModal, selectedPet])
+
+  useEffect(() => {
+    setPets(petsDef)
+    const getPhoto = async () => {
+      await R.forEach((pet: any) => {
+        const reader = new FileReader();
+
+        reader.addEventListener('load', ({ target }) => {
+          if (!R.isNil(target)) {
+            setPets(prev => R.map((item: any) => {
+              if (item._id === pet._id) return ({ ...item, photoSrc: String(target.result) })
+              return item
+            }, prev))
+          }
+        })
+        const imageSrc = async (item: any) => {
           const res = await fetch('/pets/photos', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userID: pet.userID, petID: pet._id }),
+            body: JSON.stringify({ userID: item.userID, petID: item._id }),
           })
           const buffer = await res.arrayBuffer()
           const bytes = new Uint8Array(buffer)
           const blob = new Blob([bytes.buffer]);
 
-          const image = document.getElementById(`image__${pet._id}`) as HTMLInputElement
-          const reader = new FileReader();
-
-          reader.addEventListener('load', ({ target }) => {
-            if (!R.isNil(target)) image.src = String(target.result);
-          });
-
-          reader.readAsDataURL(blob);
+          reader.readAsDataURL(blob)
         }
-        imageSrc()
-      }, pets)
+        imageSrc(pet)
+      }, petsDef)
     }
-  }, [pets, openModal])
+    getPhoto()
+  }, [petsDef])
 
   return (
     <PetsCard
@@ -331,8 +338,10 @@ const PetsCardContainer = ({
       type={type}
       color={color}
       photo={photo}
+      isEdit={isEdit}
       weight={weight}
       height={height}
+      isIdent={isIdent}
       nickname={nickname}
       birthday={birthday}
       openModal={openModal}
@@ -349,10 +358,12 @@ const PetsCardContainer = ({
 
 export default connect(
   (state) => ({
-    pets: petsS(state),
+    petsDef: petsS(state),
     isFetching: isFetchingPetsS(state),
   }),
   {
     createPet: createPetA.request,
+    updatePet: updatePetA.request,
+    selectPet: selectPetA,
   },
 )(PetsCardContainer)

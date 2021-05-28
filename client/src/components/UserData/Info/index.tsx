@@ -99,7 +99,7 @@ const UserInfo = ({
             <Input
               transparent
             />
-                )}
+          )}
           dateFormat="dd.MM.yyyy"
           placeholderText="Дата рождения"
           onChange={(date: any, e: SyntheticEvent): void => handleChangeInputs(e as never, 'birthday', date)}

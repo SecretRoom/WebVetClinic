@@ -14,6 +14,8 @@ type PetsCardProps = {
   height: string
   nickname: string
 
+  isEdit: boolean
+  isIdent: boolean
   openModal: boolean
   isFetching: boolean
   isDisSaveButton: boolean
@@ -37,8 +39,10 @@ const PetsCard = ({
   type,
   photo,
   color,
+  isEdit,
   weight,
   height,
+  isIdent,
   nickname,
   birthday,
   openModal,
@@ -63,7 +67,10 @@ const PetsCard = ({
           size="tiny"
           open={openModal}
           className="pet-modal"
-          onClose={handleChangeOpenModal}
+          onClose={(e: SyntheticEvent): void => {
+            e.stopPropagation()
+            handleChangeOpenModal()
+          }}
           trigger={(
             <Button
               animated
@@ -88,10 +95,10 @@ const PetsCard = ({
             </Button>
           )}
         >
-          <Modal.Header content="Добавление питомца" />
+          <Modal.Header content={`${isEdit ? 'Редактирование' : 'Добавление'} питомца`} />
           <Modal.Content content={(
             <>
-              {R.isNil(photo) ? (
+              {R.isNil(photo) && !isEdit ? (
                 <>
                   <label htmlFor="photo" className="photo-label__upload">
                     <div
@@ -108,7 +115,7 @@ const PetsCard = ({
                   </label>
                 </>
               ) : (
-                <Image scr="" id="upload-photo" />
+                <Image id="upload-photo" />
               )}
               <div className="fields">
                 <div className={R.isEmpty(nickname) ? 'field-empty' : 'field'}>
@@ -195,20 +202,20 @@ const PetsCard = ({
                     className="upload-other"
                   >
                     <Icon
-                      link={!R.isNil(photo)}
+                      link={!R.isNil(photo) || isEdit}
                       size="big"
                       color="orange"
                       name="upload"
-                      disabled={R.isNil(photo)}
+                      disabled={R.isNil(photo) && !isEdit}
                     />
                   </label>
                   <Button
-                    label
                     fluid
-                    positive
+                    style={{ height: 'max-content' }}
                     icon="save"
+                    positive
                     content="Сохранить"
-                    disabled={isDisSaveButton}
+                    disabled={isDisSaveButton || isIdent}
                     onClick={(): void => handleClickSave()}
                   />
                 </div>

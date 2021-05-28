@@ -84,6 +84,44 @@ router.post(
     }
   })
 
+// /pets/update
+router.post(
+  '/update',
+  async (req, res) => {
+    try {
+      const {
+        petID,
+        nickname,
+        birthday,
+        sex,
+        type,
+        color,
+        height,
+        weight,
+      } = req.body
+
+      const update = await Pet.findByIdAndUpdate(petID, {
+        nickname,
+        birthday,
+        sex,
+        type,
+        color,
+        height,
+        weight,
+      })
+      if (R.isEmpty(update)) {
+        return res.status(400).json({ status: '1', message: 'Ошибка редактирования' })
+      }
+
+
+      res.status(200).json({ status: '0', message: 'Данные сохранены' })
+
+    } catch (e) {
+      res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
+    }
+  })
+
+
 // /pets/:id
 router.get(
   '/:id',
