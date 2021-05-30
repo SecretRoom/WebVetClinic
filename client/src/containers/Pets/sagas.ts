@@ -3,15 +3,29 @@ import { SagaIterator } from 'redux-saga';
 import * as R from 'ramda'
 
 import { ActionType } from 'typesafe-actions';
-import { createPetA, updatePetA, getPetsA } from './actions';
+import { createPetA, updatePetA, getPetsA, selectPetA } from './actions';
 import { userIDS } from '../Auth/selectors';
 import PetsAPI from '../../services/API/Pets'
+import { selectedPetIDS } from './selectors';
 
 function* getPetsSaga(): SagaIterator {
   try {
     const userID = yield select(state => userIDS(state))
+    const selectedPetID = yield select(state => selectedPetIDS(state))
     const { status, items } = yield call([PetsAPI, PetsAPI.getPets], userID)
     if (status !== '1') {
+      if (selectedPetID) {
+        yield put(selectPetA(
+          JSON.parse(
+            JSON.stringify(
+              {
+                ...R.find(R.propEq('_id', selectedPetID))(items),
+                photoSrc: sessionStorage.getItem('photoSrc'),
+              },
+            ),
+          ),
+        ))
+      }
       yield put(getPetsA.success(items))
     }
   } catch (error) {
@@ -56,7 +70,7 @@ function* updatePetSaga(action: ActionType<typeof updatePetA.request>): SagaIter
         formData.append('userID', userID)
         formData.append('petID', action.payload.petID)
         fetch('/pets/photos/upload', {
-            method: 'POST',
+          method: 'POST',
           body: formData,
         })
       }

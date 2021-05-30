@@ -90,20 +90,24 @@ const UserInfo = ({
       </div>
       <div className={R.isNil(birthday) ? 'field-empty' : 'field'}>
         {!R.isNil(birthday) && <span>Дата рождения</span>}
-        <DatePicker
-          closeOnScroll
-          selected={birthday}
-          maxDate={new Date()}
-          disabled={isFetching || isDisInput}
-          customInput={(
-            <Input
-              transparent
-            />
-          )}
-          dateFormat="dd.MM.yyyy"
-          placeholderText="Дата рождения"
-          onChange={(date: any, e: SyntheticEvent): void => handleChangeInputs(e as never, 'birthday', date)}
-        />
+        {R.isNil(birthday) ? (
+          <div />
+        ) : (
+          <DatePicker
+            closeOnScroll
+            selected={birthday}
+            maxDate={new Date()}
+            disabled={isFetching || isDisInput}
+            customInput={(
+              <Input
+                transparent
+              />
+            )}
+            dateFormat="dd.MM.yyyy"
+            placeholderText="Дата рождения"
+            onChange={(date: any, e: SyntheticEvent): void => handleChangeInputs(e as never, 'birthday', date)}
+          />
+        )}
       </div>
       <div className={R.isEmpty(sex) ? 'field-empty' : 'field'}>
         {!R.isEmpty(sex) && <span>Пол</span>}
@@ -118,9 +122,9 @@ const UserInfo = ({
           selectOnNavigation={false}
           onChange={(e: SyntheticEvent, { value }: any) => handleChangeInputs(e as never, 'sex', value)}
           options={[
-                  { key: 'м', value: 'м', text: 'мужской' },
-                  { key: 'ж', value: 'ж', text: 'женский' },
-                ]}
+            { key: 'м', value: 'м', text: 'мужской' },
+            { key: 'ж', value: 'ж', text: 'женский' },
+          ]}
         />
       </div>
       <div className={R.isEmpty(email) ? 'field-empty' : 'field'}>
@@ -158,35 +162,35 @@ const UserInfo = ({
           onClick={(): void => handleClickEdit()}
           className="user-data__button"
         />
-            ) : (
-              <div
-                className="user-data__buttons-group"
-              >
-                <Icon
-                  name="save"
-                  size="big"
-                  color="green"
-                  link={!isError && !isIdent}
-                  disabled={isError || isIdent}
-                  onClick={(): void => handleClickSave()}
-                />
-                <Icon
-                  size="big"
-                  color="grey"
-                  link={!isIdent}
-                  disabled={isIdent}
-                  name="undo alternate"
-                  onClick={(): void => handleClickReset()}
-                />
-                <Icon
-                  link
-                  size="big"
-                  color="red"
-                  name="cancel"
-                  onClick={(): void => handleClickCancel()}
-                />
-              </div>
-            )}
+      ) : (
+        <div
+          className="user-data__buttons-group"
+        >
+          <Icon
+            name="save"
+            size="big"
+            color="green"
+            link={!isError && !isIdent}
+            disabled={isError || isIdent}
+            onClick={(): void => handleClickSave()}
+          />
+          <Icon
+            size="big"
+            color="grey"
+            link={!isIdent}
+            disabled={isIdent}
+            name="undo alternate"
+            onClick={(): void => handleClickReset()}
+          />
+          <Icon
+            link
+            size="big"
+            color="red"
+            name="cancel"
+            onClick={(): void => handleClickCancel()}
+          />
+        </div>
+      )}
     </Segment>
   </div>
 )

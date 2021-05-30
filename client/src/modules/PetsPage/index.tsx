@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement } from 'react'
-import PetsWorkSpaceContainer from '../../containers/Pets'
+import { Route, withRouter } from 'react-router-dom'
+import PetContainer from '../../containers/Pets/Pet'
 
-const PetsPage = (): ReactElement => (
-  <PetsWorkSpaceContainer />
+const PetPage = (): ReactElement => (
+  <PetContainer />
 )
 
-export default PetsPage
+export default PetPage

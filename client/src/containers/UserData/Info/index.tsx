@@ -159,13 +159,13 @@ const UserInfoContainer = ({
   ])
 
   useEffect(() => {
-    setSex(sexDef)
-    setName(nameDef)
-    setPhone(phoneDef)
-    setEmail(emailDef)
-    setSurname(surnameDef)
-    setPatronymic(patronymicDef)
-    setBirthday(new Date(birthdayDef))
+    setSex(sexDef || '')
+    setName(nameDef || '')
+    setPhone(phoneDef || '')
+    setEmail(emailDef || '')
+    setSurname(surnameDef || '')
+    setPatronymic(patronymicDef || '')
+    setBirthday(new Date(birthdayDef) || null)
   }, [])
 
   return (

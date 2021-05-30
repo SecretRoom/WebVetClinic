@@ -1,21 +1,24 @@
 // eslint-disable-next-line no-use-before-define
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { connect } from 'react-redux'
+import * as R from 'ramda'
 import Pet from '../../../components/Pets/Pet'
-import { isFetchingPetsS, selectedPetIDS } from '../selectors'
+import { selectPetA } from '../actions'
+import { isFetchingPetsS, petsS, selectedPetIDS, selectedPetS } from '../selectors'
 
 type PetContainerProps = {
-  petID: string
+  petInfo: any
 
   isFetching: boolean
 }
 
 const PetContainer = ({
-  petID,
+  petInfo,
   isFetching,
 }: PetContainerProps): ReactElement => {
   return (
     <Pet
+      petInfo={petInfo}
       isFetching={isFetching}
     />
   )
@@ -23,7 +26,7 @@ const PetContainer = ({
 
 export default connect(
   (state) => ({
-    petID: selectedPetIDS(state),
+    petInfo: selectedPetS(state),
     isFetching: isFetchingPetsS(state),
   }),
   {

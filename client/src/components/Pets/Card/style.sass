@@ -6,18 +6,19 @@
   margin: 5px 10px
   height: 92vh
   grid-gap: 20px
-  overflow-y: auto
+  overflow-y: overlay
   grid-template-columns: repeat(auto-fit, 490px)
   grid-template-rows: repeat(auto-fit, 400px)
   .ui.segment
     margin: 0 !important
   .card
     display: grid !important
+    border-radius: 5px !important
     width: max-content !important
     height: max-content !important
     grid-template-columns: 300px max-content
     &:hover
-      top: 3px
+      top: -3px
     .pet-photo
       img
         max-height: 400px
@@ -37,7 +38,7 @@
       .fields
         grid-gap: 10px
         width: max-content
-        grid-template-rows: repeat(auto-fit,  minmax(40px, max-content))
+        grid-template-rows: repeat(auto-fit, minmax(40px, max-content))
         display: grid
         .field
           display: grid

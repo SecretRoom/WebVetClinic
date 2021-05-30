@@ -149,7 +149,7 @@ const PetsCardContainer = ({
         <Image
           as={NavLink}
           onClick={(): void => selectPet(pet)}
-          to={`/pets/${pet._id}/data`}
+          to={`/pets/${pet._id}`}
           id={`image__${pet._id}`}
           src={pet.photoSrc}
           alt=""
@@ -171,7 +171,7 @@ const PetsCardContainer = ({
             </div>
             <div className="field">
               <span>Пол</span>
-              <span>{pet.sex === 'м' ? 'Мужской' : 'Женский' }</span>
+              <span>{pet.sex === 'м' ? 'Мужской' : 'Женский'}</span>
             </div>
             <div className="field">
               <span>Дата рождения</span>
@@ -179,27 +179,27 @@ const PetsCardContainer = ({
             </div>
             <div
               style={{
-              display: 'grid',
-              gridColumnGap: '5px',
-              width: 'max-content',
-              height: 'max-content',
-              gridTemplateColumns: 'repeat(2, max-content)',
-              alignItems: 'center',
-            }}
+                display: 'grid',
+                gridColumnGap: '5px',
+                width: 'max-content',
+                height: 'max-content',
+                gridTemplateColumns: 'repeat(2, max-content)',
+                alignItems: 'center',
+              }}
             >
               <div
                 className="field"
                 style={{ width: '82px' }}
               >
                 <span>Вес</span>
-                <span>{pet.weight}</span>
+                <span>{pet.weight} кг</span>
               </div>
               <div
                 className="field"
                 style={{ width: '82px' }}
               >
                 <span>Рост</span>
-                <span>{pet.height}</span>
+                <span>{pet.height} см</span>
               </div>
             </div>
           </div>
@@ -292,8 +292,8 @@ const PetsCardContainer = ({
 
   useEffect(() => {
     if (isEdit && openModal && selectedPet) {
-        const image = document.getElementById('upload-photo') as HTMLInputElement
-        image.src = selectedPet.photoSrc
+      const image = document.getElementById('upload-photo') as HTMLInputElement
+      image.src = selectedPet.photoSrc
     }
   }, [isEdit, openModal, selectedPet])
 

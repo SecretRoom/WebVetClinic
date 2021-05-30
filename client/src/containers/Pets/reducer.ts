@@ -35,6 +35,7 @@ export default function reducer(
     }
     case getType(selectPetA): {
       sessionStorage.setItem('petID', action.payload._id)
+      sessionStorage.setItem('photoSrc', action.payload.photoSrc)
       return state
         .set('selectedPet', action.payload)
     }

@@ -12,7 +12,7 @@ import PetsPage from '../modules/PetsPage/index.tsx'
 const routes = [
   {
     title: 'Питомцы',
-    path: '/pets',
+    path: '/pets/:petID',
     component: PetsPage,
     rights: {
       show: '',
@@ -24,7 +24,7 @@ const routes = [
     exact: true,
   },
   {
-    title: 'Личные данные',
+    title: 'Личный кабинет',
     path: '/user/data',
     component: UserDataPage,
     rights: {
