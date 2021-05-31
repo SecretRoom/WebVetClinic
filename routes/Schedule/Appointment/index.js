@@ -100,6 +100,7 @@ router.get(
       }
 
       const findService = (serviceList) => R.map((item) => item.name, R.filter((service) => R.includes(service.id, serviceList),services))
+      const findServicePrice = (serviceList) => R.map((item) => +item.price, R.filter((service) => R.includes(service.id, serviceList),services))
 
       res.status(200).json({
         items: R.map((item) => ({
@@ -109,6 +110,7 @@ router.get(
           service: findService(item.serviceID),
           date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
           empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
+          price: R.add(R.sum(findServicePrice(item.serviceID)),700)
         }), findAppointment), status: '0'
       })
     } catch (e) {

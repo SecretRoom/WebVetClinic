@@ -56,11 +56,22 @@
       &-header
         color: $second_dark_color
         display: grid
-        grid-template-columns: repeat(2, max-content)
-        grid-gap: 5px
         align-items: center
         .ui.header
           color: $second_dark_color
           margin: 0
       .ui.segment
         margin: 0
+      .cards
+        // display: grid
+        // grid-template-columns: repeat(auto-fit, 300px)
+        height: 100%
+        .card
+          width: 260px !important
+          .content
+          .header
+            color: $second_dark_color !important
+          .description
+            color: $dark_font !important
+            // font-weight: bold
+            padding-left: 10px

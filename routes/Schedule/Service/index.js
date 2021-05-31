@@ -34,6 +34,7 @@ router.get(
           serviceID: item.serviceID,
           empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
           service: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.serviceID))(services) || { name: '' })).name,
+          price: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.serviceID))(services) || { price: '' })).price,
         }), findAppointment), status: '0'
       })
     } catch (e) {

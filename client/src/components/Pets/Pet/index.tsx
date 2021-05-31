@@ -6,14 +6,29 @@ import './style.sass'
 import moment from 'moment';
 
 type PetProps = {
-  petInfo: any
-
   isFetching: boolean
+  isFetchingServices: boolean
+  isFetchingAppointments: boolean
+
+  petInfo: any
+  services: any[]
+  appointments: any[]
+
+  createServicesCard: (list: any []) => ReactElement
+  createAppointmentsCard: (list: any []) => ReactElement
+
 }
 
 const Pet = ({
   petInfo,
+  services,
   isFetching,
+  appointments,
+  isFetchingServices,
+  isFetchingAppointments,
+
+  createServicesCard,
+  createAppointmentsCard,
 }: PetProps): ReactElement => (
   <>
     {isFetching || R.isNil(petInfo.nickname) ? (
@@ -72,22 +87,23 @@ const Pet = ({
           <div className="pet__content-data__row">
             <div className="pet__content-data__row-header">
               <Header as="h2">
-                Прием
+                Посещения
               </Header>
-              <Popup
-                hideOnScroll
-                position="right center"
-                content="Записаться на прием"
-                trigger={(
-                  <Icon
-                    link
-                    name="plus"
-                    size="large"
-                  />
-                )}
-              />
             </div>
-            <Segment placeholder />
+            <Segment
+              placeholder
+              loading={isFetchingAppointments}
+            >
+              {R.isEmpty(appointments)
+                ? (
+                  <Header icon color="grey">
+                    <Icon name="inbox" />
+                    Посещения отсутвуют
+                  </Header>
+                  )
+                : createAppointmentsCard(appointments)
+              }
+            </Segment>
           </div>
           <Divider />
           <div className="pet__content-data__row">
@@ -95,23 +111,21 @@ const Pet = ({
               <Header as="h2">
                 Услуги
               </Header>
-              <Popup
-                hideOnScroll
-                position="right center"
-                content="Записаться на услугу"
-                trigger={(
-                  <Icon
-                    link
-                    name="plus"
-                    size="large"
-                  />
-                )}
-              />
             </div>
-            <Segment placeholder />
-            {
-            // eslint-disable-next-line no-console
-            console.log(moment(new Date()).toISOString()) }
+            <Segment
+              placeholder
+              loading={isFetchingServices}
+            >
+              {R.isEmpty(services)
+                ? (
+                  <Header icon color="grey">
+                    <Icon name="inbox" />
+                    Услуги остутсвуют
+                  </Header>
+                  )
+                : createServicesCard(services)
+              }
+            </Segment>
           </div>
         </Segment>
       </div>

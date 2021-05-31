@@ -3,9 +3,10 @@ import { SagaIterator } from 'redux-saga';
 import * as R from 'ramda'
 
 import { ActionType } from 'typesafe-actions';
-import { createPetA, updatePetA, getPetsA, selectPetA } from './actions';
+import { createPetA, updatePetA, getPetsA, selectPetA, getScheduleAppointmentA, getScheduleServiceA } from './actions';
 import { userIDS } from '../Auth/selectors';
 import PetsAPI from '../../services/API/Pets'
+import ScheduleAPI from '../../services/API/Schedule'
 import { selectedPetIDS } from './selectors';
 
 function* getPetsSaga(): SagaIterator {
@@ -82,8 +83,34 @@ function* updatePetSaga(action: ActionType<typeof updatePetA.request>): SagaIter
   }
 }
 
+function* getScheduleAppointmentSaga(): SagaIterator {
+  try {
+    const selectedPetID = yield select(state => selectedPetIDS(state))
+    const { status, items } = yield call([ScheduleAPI, ScheduleAPI.getAppointment], selectedPetID)
+    if (status !== '1') {
+      yield put(getScheduleAppointmentA.success(items))
+    }
+  } catch (error) {
+    yield put(getScheduleAppointmentA.failure(error))
+  }
+}
+
+function* getScheduleServiceSaga(): SagaIterator {
+  try {
+    const selectedPetID = yield select(state => selectedPetIDS(state))
+    const { status, items } = yield call([ScheduleAPI, ScheduleAPI.getService], selectedPetID)
+    if (status !== '1') {
+      yield put(getScheduleServiceA.success(items))
+    }
+  } catch (error) {
+    yield put(getScheduleServiceA.failure(error))
+  }
+}
+
 export default function* (): SagaIterator {
   yield takeEvery(getPetsA.request, getPetsSaga)
   yield takeEvery(createPetA.request, createPetSaga)
   yield takeEvery(updatePetA.request, updatePetSaga)
+  yield takeEvery(getScheduleServiceA.request, getScheduleServiceSaga)
+  yield takeEvery(getScheduleAppointmentA.request, getScheduleAppointmentSaga)
 }

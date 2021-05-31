@@ -11,6 +11,15 @@ import {
   UPDATE_PET_ERROR,
   SELECT_PET,
   RESET_SELECTED_PET,
+  GET_SCHEDULE_APPOINTMENT_REQUEST,
+  GET_SCHEDULE_APPOINTMENT_SUCCESS,
+  GET_SCHEDULE_APPOINTMENT_ERROR,
+  GET_SCHEDULE_SERVICE_REQUEST,
+  GET_SCHEDULE_SERVICE_SUCCESS,
+  GET_SCHEDULE_SERVICE_ERROR,
+  ADD_TO_SCHEDULE_REQUEST,
+  ADD_TO_SCHEDULE_SUCCESS,
+  ADD_TO_SCHEDULE_ERROR,
 } from './types'
 
 export const getPetsA = createAsyncAction(
@@ -44,3 +53,27 @@ export const selectPetA = createAction(
 export const resetSelectedPetA = createAction(
   RESET_SELECTED_PET,
 )<undefined>()
+
+export const getScheduleAppointmentA = createAsyncAction(
+  GET_SCHEDULE_APPOINTMENT_REQUEST,
+  GET_SCHEDULE_APPOINTMENT_SUCCESS,
+  GET_SCHEDULE_APPOINTMENT_ERROR,
+)<
+  undefined, any, Error
+>()
+
+export const getScheduleServiceA = createAsyncAction(
+  GET_SCHEDULE_SERVICE_REQUEST,
+  GET_SCHEDULE_SERVICE_SUCCESS,
+  GET_SCHEDULE_SERVICE_ERROR,
+)<
+  undefined, any, Error
+>()
+
+export const addToScheduleA = createAsyncAction(
+  ADD_TO_SCHEDULE_REQUEST,
+  ADD_TO_SCHEDULE_SUCCESS,
+  ADD_TO_SCHEDULE_ERROR,
+)<
+  any, undefined, Error
+>()

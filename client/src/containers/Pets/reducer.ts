@@ -1,6 +1,6 @@
 import { ActionType, getType } from 'typesafe-actions'
 import { Map } from 'immutable'
-import { getPetsA, resetSelectedPetA, selectPetA } from './actions'
+import { getPetsA, getScheduleAppointmentA, getScheduleServiceA, resetSelectedPetA, selectPetA } from './actions'
 
 type petsState = any
 
@@ -10,6 +10,10 @@ const INITIAL_STATE = Map<petsState>({
   selectedPet: {
     _id: sessionStorage.getItem('petID') || undefined,
   },
+  services: {},
+  appointments: {},
+  isFetchingServices: false,
+  isFetchingAppointments: false,
 })
 
 export default function reducer(
@@ -18,6 +22,8 @@ export default function reducer(
     typeof getPetsA
     | typeof selectPetA
     | typeof resetSelectedPetA
+    | typeof getScheduleServiceA
+    | typeof getScheduleAppointmentA
   >): typeof INITIAL_STATE {
   switch (action.type) {
     case getType(getPetsA.request): {
@@ -32,6 +38,32 @@ export default function reducer(
     case getType(getPetsA.failure): {
       return state
         .set('isFetching', false)
+    }
+    case getType(getScheduleServiceA.request): {
+      return state
+        .set('isFetchingServices', true)
+    }
+    case getType(getScheduleServiceA.success): {
+      return state
+        .set('services', action.payload)
+        .set('isFetchingServices', false)
+    }
+    case getType(getScheduleServiceA.failure): {
+      return state
+        .set('isFetchingServices', false)
+    }
+    case getType(getScheduleAppointmentA.request): {
+      return state
+        .set('isFetchingAppointments', true)
+    }
+    case getType(getScheduleAppointmentA.success): {
+      return state
+        .set('appointments', action.payload)
+        .set('isFetchingAppointments', false)
+    }
+    case getType(getScheduleAppointmentA.failure): {
+      return state
+        .set('isFetchingAppointments', false)
     }
     case getType(selectPetA): {
       sessionStorage.setItem('petID', action.payload._id)
