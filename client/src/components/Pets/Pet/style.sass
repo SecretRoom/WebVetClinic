@@ -7,7 +7,7 @@
   grid-gap: 10px
   grid-template-columns: max-content 1fr
   &-info
-    display: grid
+    display: grid !important
     margin: 0 !important
     width: 300px !important
     grid-template-rows: repeat(4, max-content)
@@ -48,6 +48,8 @@
     display: grid
     grid-template-rows: 1fr max-content 1fr
     grid-gap: 10px
+    height: 92vh
+    overflow-y: auto
     margin: 0 !important
     &__row
       display: grid

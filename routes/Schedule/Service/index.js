@@ -9,9 +9,7 @@ const ScheduleService = require('../../../models/ScheduleService')
 const router = Router()
 
 
-// /directories/service
-
-// /schedule/appointment/:petID
+// /schedule/service/:petID
 router.get(
   '/:petID',
   async (req, res) => {
@@ -19,23 +17,23 @@ router.get(
 
       const staff = await Staff.find()
       const services = await Service.find()
-      const findAppointment = await ScheduleService.find({ petID: req.params.petID }).sort({ date: 'desc' })
+      const findService = await ScheduleService.find({ petID: req.params.petID }).sort({ date: 'desc' })
 
 
-      if (!findAppointment) {
+      if (!findService) {
         return res.status(400).json({ status: '0', items: [] })
       }
 
       res.status(200).json({
         items: R.map((item) => ({
           id: item.id,
-          date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
-          emplID:item.emplID,
           serviceID: item.serviceID,
-          empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
           service: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.serviceID))(services) || { name: '' })).name,
+          date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
           price: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.serviceID))(services) || { price: '' })).price,
-        }), findAppointment), status: '0'
+          emplID: item.emplID,
+          empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
+        }), findService), status: '0'
       })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })

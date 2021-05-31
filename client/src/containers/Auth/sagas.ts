@@ -7,6 +7,7 @@ import {
 import IndexedDB from '../../services/IndexedDB'
 
 import StaffAPI from '../../services/API/Staff'
+import DirectoriesAPI from '../../services/API/Directories'
 
 import { NAME_INDEXED_DB } from '../../config';
 
@@ -23,14 +24,17 @@ function* authSaga(action: ActionType<typeof authA.request>): SagaIterator {
     const { status, userID } = yield call([AuthAPI, AuthAPI.auth], action.payload)
     if (status !== '1') {
       const dataStaff = yield call([StaffAPI, StaffAPI.getStaff], {})
+      const dataServices = yield call([DirectoriesAPI, DirectoriesAPI.getServices])
 
       if (
         dataStaff.status !== '1'
+        && dataServices.status !== '1'
       ) {
         IndexedDB.createDB(
           NAME_INDEXED_DB.nameDB,
           {
             [NAME_INDEXED_DB.nameDS.staff]: dataStaff.items,
+            [NAME_INDEXED_DB.nameDS.services]: dataServices.items,
           },
           NAME_INDEXED_DB.version,
         )
