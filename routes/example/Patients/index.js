@@ -82,7 +82,7 @@ router.post(
 
       await newPatient.save()
 
-      res.status(201).json({ status: '2', message: 'Пациент создан' })
+      res.status(200).json({ status: '2', message: 'Пациент создан' })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
     }

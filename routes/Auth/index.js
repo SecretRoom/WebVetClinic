@@ -68,7 +68,7 @@ router.post(
 
       await newUser.save()
 
-      res.status(201).json({ status: '0', message: 'Пользователь создан' })
+      res.status(200).json({ status: '0', message: 'Пользователь создан' })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
     }

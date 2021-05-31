@@ -2,19 +2,22 @@
 
 .pet__content
   display: grid
-  margin: 5px
+  margin: 5px 10px
   height: 92vh
+  grid-gap: 10px
   grid-template-columns: max-content 1fr
   &-info
     display: grid
     margin: 0 !important
     width: 300px !important
     grid-template-rows: repeat(4, max-content)
+    height: max-content
     .pet-photo
       max-width: 300px
       max-height: 400px
     .content
       align-content: center
+      flex-grow: 0 !important
     .fields-top
       display: grid
       grid-gap: 5px
@@ -41,3 +44,23 @@
           padding-left: 5px
       &::after
         display: none !important
+  &-data
+    display: grid
+    grid-template-rows: 1fr max-content 1fr
+    grid-gap: 10px
+    margin: 0 !important
+    &__row
+      display: grid
+      grid-gap: 10px
+      grid-template-rows: max-content 1fr
+      &-header
+        color: $second_dark_color
+        display: grid
+        grid-template-columns: repeat(2, max-content)
+        grid-gap: 5px
+        align-items: center
+        .ui.header
+          color: $second_dark_color
+          margin: 0
+      .ui.segment
+        margin: 0

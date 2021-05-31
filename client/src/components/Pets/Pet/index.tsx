@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
-import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal, Label, Card } from 'semantic-ui-react'
+import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal, Label, Card, Header, Divider, Popup } from 'semantic-ui-react'
 import * as R from 'ramda'
 import './style.sass'
 import moment from 'moment';
@@ -65,7 +65,55 @@ const Pet = ({
             </div>
           </Card.Content>
         </Card>
-        <div className="pet__content-data" />
+        <Segment
+          raised
+          className="pet__content-data"
+        >
+          <div className="pet__content-data__row">
+            <div className="pet__content-data__row-header">
+              <Header as="h2">
+                Прием
+              </Header>
+              <Popup
+                hideOnScroll
+                position="right center"
+                content="Записаться на прием"
+                trigger={(
+                  <Icon
+                    link
+                    name="plus"
+                    size="large"
+                  />
+                )}
+              />
+            </div>
+            <Segment placeholder />
+          </div>
+          <Divider />
+          <div className="pet__content-data__row">
+            <div className="pet__content-data__row-header">
+              <Header as="h2">
+                Услуги
+              </Header>
+              <Popup
+                hideOnScroll
+                position="right center"
+                content="Записаться на услугу"
+                trigger={(
+                  <Icon
+                    link
+                    name="plus"
+                    size="large"
+                  />
+                )}
+              />
+            </div>
+            <Segment placeholder />
+            {
+            // eslint-disable-next-line no-console
+            console.log(moment(new Date()).toISOString()) }
+          </div>
+        </Segment>
       </div>
     )}
   </>

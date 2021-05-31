@@ -55,7 +55,7 @@ router.post(
 
       await newStaff.save()
 
-      res.status(201).json({ status: '2', message: 'Сотрудник создан' })
+      res.status(200).json({ status: '2', message: 'Сотрудник создан' })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
     }
