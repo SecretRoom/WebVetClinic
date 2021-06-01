@@ -70,6 +70,8 @@ export default function reducer(
       sessionStorage.setItem('photoSrc', action.payload.photoSrc)
       return state
         .set('selectedPet', action.payload)
+        .set('services', [])
+        .set('appointments', [])
     }
     case getType(resetSelectedPetA): {
       sessionStorage.removeItem('petID')

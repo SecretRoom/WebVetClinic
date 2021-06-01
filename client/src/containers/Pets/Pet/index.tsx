@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-use-before-define
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
 import { Card, Segment } from 'semantic-ui-react'
@@ -43,14 +43,12 @@ const PetContainer = ({
   getScheduleService,
   getScheduleAppointment,
 }: PetContainerProps): ReactElement => {
-  useEffect(() => {
-    getScheduleService()
-    getScheduleAppointment()
-  }, [])
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [isDisSaveButton, setIsDisSaveButton] = useState<boolean>(true)
 
   const createServicesCard = (list: any[]): ReactElement => (
-    <Card.Group className="cards">
-      {R.map((item) => (
+    <>
+      {R.map((item: any) => (
         <Card key={Math.random()} className="card">
           <Card.Content>
             <Card.Header>Услуга</Card.Header>
@@ -74,14 +72,16 @@ const PetContainer = ({
           </Card.Content>
         </Card>
       ), list)}
-    </Card.Group>
+    </>
   )
+
   const createAppointmentsCard = (list: any[]): ReactElement => (
-    <Card.Group className="cards">
+    <>
       {R.map((item) => (
         <Card key={Math.random()} className="card">
           <Card.Content>
             <Card.Header>Специалист</Card.Header>
+            <Card.Description>{item.emplProfName}</Card.Description>
             <Card.Description>{item.empl}</Card.Description>
           </Card.Content>
           <Card.Content>
@@ -102,19 +102,89 @@ const PetContainer = ({
           </Card.Content>
         </Card>
       ), list)}
-    </Card.Group>
+    </>
   )
+
+  const createScheduleAppointment = () : ReactElement => (
+    <div />
+  )
+
+  const handleChangeInputs = (e: SyntheticEvent, field: string, value: any): void => {
+    switch (field) {
+      // case 'sex':
+      //   setSex(value)
+      //   break
+      // case 'nickname':
+      //   setNickname(prev => (R.test(/[^a-zа-я]+/gi, value) ? prev : value))
+      //   break
+      // case 'type':
+      //   setType(prev => (R.test(/[^a-zа-я]+/gi, value) ? prev : value))
+      //   break
+      // case 'weight':
+      //   setWeight(prev => (R.test(/\D/, value) ? prev : value))
+      //   break
+      // case 'height':
+      //   setHeight(prev => (R.test(/\D/, value) ? prev : value))
+      //   break
+      // case 'color':
+      //   setColor(value)
+      //   break
+      // case 'birthday':
+      //   setBirthday(value)
+      //   break
+      default:
+        break;
+    }
+  }
+
+  const handleChangeOpenModal = (): void => setOpenModal(prev => !prev)
+
+  const handleClickSave = (): void => {
+    // if (isEdit) {
+    //   updatePet({
+    //     petID: selectedPet._id,
+    //     sex,
+    //     type,
+    //     color,
+    //     file: photo,
+    //     weight,
+    //     height,
+    //     nickname,
+    //     birthday,
+    //   })
+    // } else {
+    //   createPet({
+    //     sex,
+    //     type,
+    //     color,
+    //     file: photo,
+    //     weight,
+    //     height,
+    //     nickname,
+    //     birthday,
+    //   })
+    // }
+    handleChangeOpenModal()
+  }
+
+  useEffect(() => {
+    getScheduleService()
+    getScheduleAppointment()
+  }, [])
 
   return (
     <Pet
       petInfo={petInfo}
       services={services}
+      openModal={openModal}
       isFetching={isFetching}
       appointments={appointments}
       isFetchingServices={isFetchingServices}
       createServicesCard={createServicesCard}
+      handleChangeOpenModal={handleChangeOpenModal}
       createAppointmentsCard={createAppointmentsCard}
       isFetchingAppointments={isFetchingAppointments}
+      createScheduleAppointment={createScheduleAppointment}
     />
   )
 }

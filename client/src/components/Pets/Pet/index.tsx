@@ -1,11 +1,13 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
+import DatePicker from 'react-datepicker';
 import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal, Label, Card, Header, Divider, Popup } from 'semantic-ui-react'
 import * as R from 'ramda'
 import './style.sass'
 import moment from 'moment';
 
 type PetProps = {
+  openModal: boolean
   isFetching: boolean
   isFetchingServices: boolean
   isFetchingAppointments: boolean
@@ -14,21 +16,25 @@ type PetProps = {
   services: any[]
   appointments: any[]
 
+  handleChangeOpenModal: () => void
   createServicesCard: (list: any []) => ReactElement
   createAppointmentsCard: (list: any []) => ReactElement
-
+  createScheduleAppointment: () => ReactElement
 }
 
 const Pet = ({
   petInfo,
   services,
+  openModal,
   isFetching,
   appointments,
   isFetchingServices,
   isFetchingAppointments,
 
   createServicesCard,
+  handleChangeOpenModal,
   createAppointmentsCard,
+  createScheduleAppointment,
 }: PetProps): ReactElement => (
   <>
     {isFetching || R.isNil(petInfo.nickname) ? (
@@ -92,11 +98,12 @@ const Pet = ({
             </div>
             <Segment
               placeholder
+              className="cards"
               loading={isFetchingAppointments}
             >
               {R.isEmpty(appointments)
                 ? (
-                  <Header icon color="grey">
+                  <Header as="h2" className="no-data" icon color="grey">
                     <Icon name="inbox" />
                     Посещения отсутвуют
                   </Header>
@@ -114,11 +121,12 @@ const Pet = ({
             </div>
             <Segment
               placeholder
+              className="cards"
               loading={isFetchingServices}
             >
               {R.isEmpty(services)
                 ? (
-                  <Header icon color="grey">
+                  <Header as="h2" className="no-data" icon color="grey">
                     <Icon name="inbox" />
                     Услуги остутсвуют
                   </Header>
@@ -128,6 +136,49 @@ const Pet = ({
             </Segment>
           </div>
         </Segment>
+        <Modal
+          size="tiny"
+          open={openModal}
+          className="schedule-modal"
+          onClose={(e: SyntheticEvent): void => {
+            e.stopPropagation()
+            handleChangeOpenModal()
+          }}
+          trigger={(
+            <Button
+              animated
+              color="orange"
+              className="schedule__trigger-button"
+              onClick={handleChangeOpenModal}
+            >
+              <Button.Content
+                hidden
+                color="orange"
+              >
+                <span>Записаться на прием или услугу</span>
+              </Button.Content>
+              <Button.Content
+                visible
+              >
+                <Icon
+                  name="pencil"
+                  size="big"
+                />
+              </Button.Content>
+            </Button>
+          )}
+        >
+          <Modal.Header content="Запись на прием или услугу" />
+          <Modal.Content content={(
+            <>
+              <Dropdown />
+              <Dropdown />
+              {createScheduleAppointment()}
+            </>
+          )}
+          />
+        </Modal>
+
       </div>
     )}
   </>

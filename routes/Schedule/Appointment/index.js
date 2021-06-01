@@ -5,6 +5,7 @@ const R = require('ramda');
 const moment = require('moment')
 const Staff = require('../../../models/Staff')
 const Service = require('../../../models/Service')
+const Profile = require('../../../models/Profile')
 const ScheduleService = require('../../../models/ScheduleService')
 const ScheduleAppointment = require('../../../models/ScheduleAppointment')
 
@@ -92,6 +93,8 @@ router.get(
 
       const staff = await Staff.find()
       const services = await Service.find()
+      const profile = await Profile.find()
+
       const findAppointment = await ScheduleAppointment.find({ petID: req.params.petID }).sort({ date: 'desc' })
 
 
@@ -99,7 +102,16 @@ router.get(
         return res.status(400).json({ status: '0', items: [] })
       }
 
+      const findProfName = (emplID) => JSON.parse(
+        JSON.stringify(
+          R.find(
+            R.propEq('id', JSON.parse(JSON.stringify(R.find(R.propEq('id', emplID))(staff) || { idProf: '' }
+          )
+        ).idProf)
+      )(profile) || { name: '' })).name
+      
       const findService = (serviceList) => R.map((item) => item.name, R.filter((service) => R.includes(service.id, serviceList),services))
+      
       const findServicePrice = (serviceList) => R.map((item) => +item.price, R.filter((service) => R.includes(service.id, serviceList),services))
 
       res.status(200).json({
@@ -109,6 +121,7 @@ router.get(
           serviceID: item.serviceID,
           service: findService(item.serviceID),
           date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
+          emplProfName: findProfName(item.emplID),
           empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
           price: R.add(R.sum(findServicePrice(item.serviceID)),700)
         }), findAppointment), status: '0'
