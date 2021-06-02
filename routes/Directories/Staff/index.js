@@ -96,8 +96,8 @@ router.post(
           fioEmpl: item.fioEmpl,
           education: item.education,
           prize: item.prize,
-          profName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idProf))(profile) || { profName: '' })).profName,
-          catName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idCat))(category) || { catName: '' })).catName,
+          profName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idProf))(profile) || { name: '' })).name,
+          catName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idCat))(category) || { name: '' })).name,
         }), staff), status: '0'
       })
     } catch (e) {

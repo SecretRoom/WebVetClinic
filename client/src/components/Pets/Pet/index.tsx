@@ -7,31 +7,44 @@ import './style.sass'
 import moment from 'moment';
 
 type PetProps = {
+  empl: string
+
   openModal: boolean
   isFetching: boolean
   isFetchingServices: boolean
   isFetchingAppointments: boolean
 
   petInfo: any
+  service: any[]
   services: any[]
+  staffList: any[]
+  servicesList: any[]
   appointments: any[]
 
   handleChangeOpenModal: () => void
+  createScheduleAppointment: () => ReactElement
   createServicesCard: (list: any []) => ReactElement
   createAppointmentsCard: (list: any []) => ReactElement
-  createScheduleAppointment: () => ReactElement
+  handleChangeEmpl: (e: SyntheticEvent, value: string) => void
+  handleChangeService: (e: SyntheticEvent, value: any[]) => void
 }
 
 const Pet = ({
+  empl,
+  service,
   petInfo,
   services,
+  staffList,
   openModal,
   isFetching,
   appointments,
+  servicesList,
   isFetchingServices,
   isFetchingAppointments,
 
+  handleChangeEmpl,
   createServicesCard,
+  handleChangeService,
   handleChangeOpenModal,
   createAppointmentsCard,
   createScheduleAppointment,
@@ -112,7 +125,6 @@ const Pet = ({
               }
             </Segment>
           </div>
-          <Divider />
           <div className="pet__content-data__row">
             <div className="pet__content-data__row-header">
               <Header as="h2">
@@ -171,8 +183,27 @@ const Pet = ({
           <Modal.Header content="Запись на прием или услугу" />
           <Modal.Content content={(
             <>
-              <Dropdown />
-              <Dropdown />
+              <Dropdown
+                search
+                selection
+                clearable
+                value={empl}
+                options={staffList}
+                selectOnBlur={false}
+                placeholder="Врач"
+                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
+              />
+              <Dropdown
+                search
+                selection
+                clearable
+                value={service}
+                selectOnBlur={false}
+                placeholder="Услуги"
+                options={servicesList}
+                multiple={servicesList.length > 1}
+                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeService(e as never, value)}
+              />
               {createScheduleAppointment()}
             </>
           )}

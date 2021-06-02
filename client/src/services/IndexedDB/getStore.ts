@@ -14,7 +14,20 @@ class GetStore {
     })
     if (R.isNil(id)) { return list }
     return JSON.parse(JSON.stringify(
-      R.find(R.propEq('idEmpl', id))(list),
+      R.find(R.propEq('id', id))(list),
+    ))
+  }
+
+  async services(id: string | undefined): Promise<any> {
+    await IndexedDB.getDS(
+      NAME_INDEXED_DB.nameDS.services,
+    ).then(res => {
+      const sort = R.sortBy(R.prop('name'))
+      list = sort(res)
+    })
+    if (R.isNil(id)) { return list }
+    return JSON.parse(JSON.stringify(
+      R.find(R.propEq('id', id))(list),
     ))
   }
 }
