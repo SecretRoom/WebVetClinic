@@ -84,6 +84,39 @@ router.post(
   },
 )
 
+// /schedule/appointment/remove
+router.post(
+  '/remove',
+  [
+    check('id').notEmpty(),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+          status: '1',
+          message: 'Некорректные данные при удалении',
+        })
+      }
+
+      const {
+        id,
+      } = req.body
+
+      await ScheduleAppointment.findByIdAndDelete(id)
+      await ScheduleService.deleteMany({ appointmentID: id })
+
+      res.status(200).json({ status: '0', message: 'Посещение отменено' })
+    } catch (e) {
+      res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
+    }
+  },
+)
+
+
 
 // /schedule/appointment/:petID
 router.get(

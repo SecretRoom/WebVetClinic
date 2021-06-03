@@ -40,4 +40,33 @@ router.get(
     }
   })
 
+  // /schedule/service/remove
+router.post(
+  '/remove',
+  async (req, res) => {
+    try {
+      const {
+        idService,
+        idAppointment,
+      } = req.body
+
+      if(R.isNil(idService) || R.isEmpty(idService)){
+        if(!R.isNil(idService) && !R.isEmpty(idService)) {
+          await ScheduleService.deleteMany({appointmentID: idAppointment})
+        } else {
+          res.status(400).json({ status: '0', message: 'Некорректные данные при удалении ' })
+        }
+      } else {
+        await ScheduleService.findByIdAndDelete(idService)
+      }
+      
+
+      res.status(200).json({ status: '0', message: 'Успешное удаление' })
+    } catch (e) {
+      res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
+    }
+  },
+)
+
+
 module.exports = router

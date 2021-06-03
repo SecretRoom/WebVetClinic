@@ -16,14 +16,13 @@ type PetProps = {
 
   petInfo: any
   service: any[]
-  services: any[]
   staffList: any[]
   servicesList: any[]
-  appointments: any[]
+  visitedAppointments: any[]
+  forthcomingAppointments: any[]
 
   handleChangeOpenModal: () => void
   createScheduleAppointment: () => ReactElement
-  createServicesCard: (list: any[]) => ReactElement
   createAppointmentsCard: (list: any[]) => ReactElement
   handleChangeEmpl: (e: SyntheticEvent, value: string) => void
   handleChangeService: (e: SyntheticEvent, value: any[]) => void
@@ -33,17 +32,16 @@ const Pet = ({
   empl,
   service,
   petInfo,
-  services,
   staffList,
   openModal,
   isFetching,
-  appointments,
   servicesList,
   isFetchingServices,
+  visitedAppointments,
   isFetchingAppointments,
+  forthcomingAppointments,
 
   handleChangeEmpl,
-  createServicesCard,
   handleChangeService,
   handleChangeOpenModal,
   createAppointmentsCard,
@@ -106,7 +104,7 @@ const Pet = ({
           <div className="pet__content-data__row">
             <div className="pet__content-data__row-header">
               <Header as="h2">
-                Посещения
+                Посещенные
               </Header>
             </div>
             <Segment
@@ -114,21 +112,21 @@ const Pet = ({
               className="cards"
               loading={isFetchingAppointments}
             >
-              {R.isEmpty(appointments)
+              {R.isEmpty(visitedAppointments)
                 ? (
                   <Header as="h2" className="no-data" icon color="grey">
                     <Icon name="inbox" />
-                    Посещения отсутвуют
+                    Посещенные отсутвуют
                   </Header>
                 )
-                : createAppointmentsCard(appointments)
+                : createAppointmentsCard(visitedAppointments)
               }
             </Segment>
           </div>
           <div className="pet__content-data__row">
             <div className="pet__content-data__row-header">
               <Header as="h2">
-                Услуги
+                Предстоящие
               </Header>
             </div>
             <Segment
@@ -136,14 +134,14 @@ const Pet = ({
               className="cards"
               loading={isFetchingServices}
             >
-              {R.isEmpty(services)
+              {R.isEmpty(forthcomingAppointments)
                 ? (
                   <Header as="h2" className="no-data" icon color="grey">
                     <Icon name="inbox" />
-                    Услуги остутсвуют
+                    Предстоящие остутсвуют
                   </Header>
                 )
-                : createServicesCard(services)
+                : createAppointmentsCard(forthcomingAppointments)
               }
             </Segment>
           </div>
@@ -184,34 +182,39 @@ const Pet = ({
           <Modal.Content content={(
             <>
               <div className="drop">
-                <Dropdown
-                  search
-                  selection
-                  clearable
-                  value={empl}
-                  options={staffList}
-                  selectOnBlur={false}
-                  placeholder="Врач"
-                  onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
-                />
-                <Dropdown
-                  search
-                  multiple
-                  selection
-                  clearable
-                  value={service}
-                  selectOnBlur={false}
-                  placeholder="Услуги"
-                  options={servicesList}
-                  onChange={(e: SyntheticEvent, { value }: any): void => handleChangeService(e as never, value)}
-                />
+                <div className="field">
+                  <span>Врач</span>
+                  <Dropdown
+                    search
+                    selection
+                    clearable
+                    value={empl}
+                    options={staffList}
+                    selectOnBlur={false}
+                    placeholder="Врач"
+                    onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
+                  />
+                </div>
+                <div className="field">
+                  <span>Услуги</span>
+                  <Dropdown
+                    search
+                    multiple
+                    selection
+                    clearable
+                    value={service}
+                    selectOnBlur={false}
+                    placeholder="Услуги"
+                    options={servicesList}
+                    onChange={(e: SyntheticEvent, { value }: any): void => handleChangeService(e as never, value)}
+                  />
+                </div>
               </div>
-              {createScheduleAppointment()}
+              {openModal && createScheduleAppointment()}
             </>
           )}
           />
         </Modal>
-
       </div>
     )}
   </>
