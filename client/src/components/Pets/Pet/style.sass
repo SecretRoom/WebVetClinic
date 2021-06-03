@@ -132,9 +132,40 @@
     text-align: center
   .content
     display: grid !important
-    grid-template-rows: repeat(2, max-content)
+    grid-template-rows: max-content 1fr
     grid-gap: 10px
-    height: max-content
+    .drop
+      display: grid
+      grid-gap: 10px
+      grid-template-columns: .5fr 1fr
+      .ui.dropdown
+        height: max-content
+    .table
+      display: grid
+      grid-template-rows: max-content 350px
+      tbody
+        overflow-y: overlay
+      tbody, thead
+        tr
+          display: grid
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))
+          td
+            display: grid
+            align-items: center
+
+      .before-date-cell
+        background: repeating-linear-gradient(to top right, #d8d8d8, #d8d8d8 2px, transparent 2px, transparent 8px )
+      tfoot
+        tr
+          display: grid
+          width: 100%
+        .buttons
+          width: 100%
+          display: grid
+          padding-right: 35px
+          justify-content: end
+          grid-template-columns: repeat(5, max-content)
+
     .fields
       display: grid
       grid-template-rows: repeat(auto-fit,40px)
@@ -178,4 +209,3 @@
           align-items: center
           i.icon
             margin: 0 !important
-

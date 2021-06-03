@@ -56,7 +56,7 @@ router.post(
         date,
       })
 
-      const addService = async(id) => {
+      const addService = async (id) => {
         const newService = new ScheduleService({
           emplID,
           petID,
@@ -66,12 +66,12 @@ router.post(
           date,
         })
         await newService.save()
-    }
+      }
 
-      if(serviceID){
+      if (serviceID) {
         R.forEach((item) => {
           addService(item)
-        },serviceID)
+        }, serviceID)
       }
 
 
@@ -95,6 +95,7 @@ router.get(
       const services = await Service.find()
       const profile = await Profile.find()
 
+
       const findAppointment = await ScheduleAppointment.find({ petID: req.params.petID }).sort({ date: 'desc' })
 
 
@@ -106,24 +107,71 @@ router.get(
         JSON.stringify(
           R.find(
             R.propEq('id', JSON.parse(JSON.stringify(R.find(R.propEq('id', emplID))(staff) || { idProf: '' }
-          )
-        ).idProf)
-      )(profile) || { name: '' })).name
-      
-      const findService = (serviceList) => R.map((item) => item.name, R.filter((service) => R.includes(service.id, serviceList),services))
-      
-      const findServicePrice = (serviceList) => R.map((item) => +item.price, R.filter((service) => R.includes(service.id, serviceList),services))
+            )
+            ).idProf)
+          )(profile) || { name: '' })).name
+
+      const findService = (serviceList) => R.map((item) => item.name, R.filter((service) => R.includes(service.id, serviceList), services))
+
+      const findServicePrice = (serviceList) => R.map((item) => +item.price, R.filter((service) => R.includes(service.id, serviceList), services))
 
       res.status(200).json({
         items: R.map((item) => ({
           id: item.id,
-          emplID:item.emplID,
+          emplID: item.emplID,
           serviceID: item.serviceID,
           service: findService(item.serviceID),
           date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
           emplProfName: findProfName(item.emplID),
           empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
-          price: R.add(R.sum(findServicePrice(item.serviceID)),700)
+          price: R.add(R.sum(findServicePrice(item.serviceID)), 700)
+        }), findAppointment), status: '0'
+      })
+    } catch (e) {
+      res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
+    }
+  })
+
+router.get(
+  '',
+  async (req, res) => {
+    try {
+
+      const staff = await Staff.find()
+      const services = await Service.find()
+      const profile = await Profile.find()
+
+
+      const findAppointment = await ScheduleAppointment.find().sort({ date: 'desc' })
+
+
+      if (!findAppointment) {
+        return res.status(400).json({ status: '0', items: [] })
+      }
+
+      const findProfName = (emplID) => JSON.parse(
+        JSON.stringify(
+          R.find(
+            R.propEq('id', JSON.parse(JSON.stringify(R.find(R.propEq('id', emplID))(staff) || { idProf: '' }
+            )
+            ).idProf)
+          )(profile) || { name: '' })).name
+
+      const findService = (serviceList) => R.map((item) => item.name, R.filter((service) => R.includes(service.id, serviceList), services))
+
+      const findServicePrice = (serviceList) => R.map((item) => +item.price, R.filter((service) => R.includes(service.id, serviceList), services))
+
+      res.status(200).json({
+        items: R.map((item) => ({
+          id: item.id,
+          petID: item.petID,
+          emplID: item.emplID,
+          serviceID: item.serviceID,
+          service: findService(item.serviceID),
+          date: moment(item.date).format('DD.MM.YYYY HH:mm').toString(),
+          emplProfName: findProfName(item.emplID),
+          empl: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.emplID))(staff) || { fioEmpl: '' })).fioEmpl,
+          price: R.add(R.sum(findServicePrice(item.serviceID)), 700)
         }), findAppointment), status: '0'
       })
     } catch (e) {

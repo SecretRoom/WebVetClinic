@@ -23,8 +23,8 @@ type PetProps = {
 
   handleChangeOpenModal: () => void
   createScheduleAppointment: () => ReactElement
-  createServicesCard: (list: any []) => ReactElement
-  createAppointmentsCard: (list: any []) => ReactElement
+  createServicesCard: (list: any[]) => ReactElement
+  createAppointmentsCard: (list: any[]) => ReactElement
   handleChangeEmpl: (e: SyntheticEvent, value: string) => void
   handleChangeService: (e: SyntheticEvent, value: any[]) => void
 }
@@ -120,7 +120,7 @@ const Pet = ({
                     <Icon name="inbox" />
                     Посещения отсутвуют
                   </Header>
-                  )
+                )
                 : createAppointmentsCard(appointments)
               }
             </Segment>
@@ -142,14 +142,14 @@ const Pet = ({
                     <Icon name="inbox" />
                     Услуги остутсвуют
                   </Header>
-                  )
+                )
                 : createServicesCard(services)
               }
             </Segment>
           </div>
         </Segment>
         <Modal
-          size="tiny"
+          size="large"
           open={openModal}
           className="schedule-modal"
           onClose={(e: SyntheticEvent): void => {
@@ -183,27 +183,29 @@ const Pet = ({
           <Modal.Header content="Запись на прием или услугу" />
           <Modal.Content content={(
             <>
-              <Dropdown
-                search
-                selection
-                clearable
-                value={empl}
-                options={staffList}
-                selectOnBlur={false}
-                placeholder="Врач"
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
-              />
-              <Dropdown
-                search
-                selection
-                clearable
-                value={service}
-                selectOnBlur={false}
-                placeholder="Услуги"
-                options={servicesList}
-                multiple={servicesList.length > 1}
-                onChange={(e: SyntheticEvent, { value }: any): void => handleChangeService(e as never, value)}
-              />
+              <div className="drop">
+                <Dropdown
+                  search
+                  selection
+                  clearable
+                  value={empl}
+                  options={staffList}
+                  selectOnBlur={false}
+                  placeholder="Врач"
+                  onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
+                />
+                <Dropdown
+                  search
+                  multiple
+                  selection
+                  clearable
+                  value={service}
+                  selectOnBlur={false}
+                  placeholder="Услуги"
+                  options={servicesList}
+                  onChange={(e: SyntheticEvent, { value }: any): void => handleChangeService(e as never, value)}
+                />
+              </div>
               {createScheduleAppointment()}
             </>
           )}

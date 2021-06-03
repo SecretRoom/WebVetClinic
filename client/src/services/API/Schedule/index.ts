@@ -6,7 +6,7 @@ class ScheduleAPI extends MainAPI {
   }
 
   async getAppointment(petID: string): Promise<Response> {
-    return this.getData(`/schedule/appointment/${petID}`)
+    return this.getData(`/schedule/appointment${petID && `/${petID}`}`)
   }
 
   async addToSchedule(data: any): Promise<Response> {

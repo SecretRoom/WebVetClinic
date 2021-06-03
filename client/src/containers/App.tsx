@@ -7,6 +7,7 @@ import * as R from 'ramda'
 import { setConfig } from 'react-hot-loader'
 import { connect } from 'react-redux'
 import { Dimmer, Loader } from 'semantic-ui-react'
+import moment from 'moment'
 import routeManager from '../routes'
 import { NOTIFICATION_DELAY } from '../config'
 
@@ -59,6 +60,13 @@ const App = ({
 
   useEffect(() => {
     _init()
+    moment.updateLocale('ru', {
+      weekdaysMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      week: {
+        dow: 1,
+        doy: 7,
+      },
+    })
   }, [])
 
   useEffect(() => {
