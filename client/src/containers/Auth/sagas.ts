@@ -24,17 +24,23 @@ function* authSaga(action: ActionType<typeof authA.request>): SagaIterator {
     const { status, userID } = yield call([AuthAPI, AuthAPI.auth], action.payload)
     if (status !== '1') {
       const dataStaff = yield call([StaffAPI, StaffAPI.getStaff], {})
+      const dataProfile = yield call([DirectoriesAPI, DirectoriesAPI.getProfile])
       const dataServices = yield call([DirectoriesAPI, DirectoriesAPI.getServices])
+      const dataCategory = yield call([DirectoriesAPI, DirectoriesAPI.getCategory])
 
       if (
         dataStaff.status !== '1'
+        && dataProfile.status !== '1'
         && dataServices.status !== '1'
+        && dataCategory.status !== '1'
       ) {
         IndexedDB.createDB(
           NAME_INDEXED_DB.nameDB,
           {
             [NAME_INDEXED_DB.nameDS.staff]: dataStaff.items,
-            [NAME_INDEXED_DB.nameDS.services]: dataServices.items,
+            [NAME_INDEXED_DB.nameDS.profile]: dataServices.items,
+            [NAME_INDEXED_DB.nameDS.services]: dataProfile.items,
+            [NAME_INDEXED_DB.nameDS.category]: dataCategory.items,
           },
           NAME_INDEXED_DB.version,
         )

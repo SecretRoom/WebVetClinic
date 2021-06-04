@@ -88,6 +88,8 @@ export const NAME_INDEXED_DB = {
   nameDB: 'WebVetClinic',
   nameDS: {
     staff: 'staff',
+    profile: 'profile',
+    category: 'category',
     services: 'services',
   },
 }

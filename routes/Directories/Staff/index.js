@@ -96,6 +96,8 @@ router.post(
           fioEmpl: item.fioEmpl,
           education: item.education,
           prize: item.prize,
+          idCat: item.idCat,
+          idProf: item.idProf,
           profName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idProf))(profile) || { name: '' })).name,
           catName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idCat))(category) || { name: '' })).name,
         }), staff), status: '0'

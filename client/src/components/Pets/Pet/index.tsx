@@ -109,12 +109,12 @@ const Pet = ({
             </div>
             <Segment
               placeholder
-              className="cards"
               loading={isFetchingAppointments}
+              className={R.isEmpty(visitedAppointments) ? 'cards__no-data' : 'cards'}
             >
               {R.isEmpty(visitedAppointments)
                 ? (
-                  <Header as="h2" className="no-data" icon color="grey">
+                  <Header as="h2" className="cards__no-data__header" icon color="grey">
                     <Icon name="inbox" />
                     Посещенные отсутвуют
                   </Header>
@@ -131,12 +131,12 @@ const Pet = ({
             </div>
             <Segment
               placeholder
-              className="cards"
               loading={isFetchingServices}
+              className={R.isEmpty(forthcomingAppointments) ? 'cards__no-data' : 'cards'}
             >
               {R.isEmpty(forthcomingAppointments)
                 ? (
-                  <Header as="h2" className="no-data" icon color="grey">
+                  <Header as="h2" className="cards__no-data__header" icon color="grey">
                     <Icon name="inbox" />
                     Предстоящие остутсвуют
                   </Header>

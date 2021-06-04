@@ -30,6 +30,32 @@ class GetStore {
       R.find(R.propEq('id', id))(list),
     ))
   }
+
+  async profile(id: string | undefined): Promise<any> {
+    await IndexedDB.getDS(
+      NAME_INDEXED_DB.nameDS.profile,
+    ).then(res => {
+      const sort = R.sortBy(R.prop('name'))
+      list = sort(res)
+    })
+    if (R.isNil(id)) { return list }
+    return JSON.parse(JSON.stringify(
+      R.find(R.propEq('id', id))(list),
+    ))
+  }
+
+  async category(id: string | undefined): Promise<any> {
+    await IndexedDB.getDS(
+      NAME_INDEXED_DB.nameDS.category,
+    ).then(res => {
+      const sort = R.sortBy(R.prop('name'))
+      list = sort(res)
+    })
+    if (R.isNil(id)) { return list }
+    return JSON.parse(JSON.stringify(
+      R.find(R.propEq('id', id))(list),
+    ))
+  }
 }
 
 export default new GetStore();

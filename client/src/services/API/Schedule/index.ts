@@ -12,6 +12,10 @@ class ScheduleAPI extends MainAPI {
   async addToSchedule(data: any): Promise<Response> {
     return this.getData('/schedule/appointment/create', data)
   }
+
+  async removeFromSchedule(id: string): Promise<Response> {
+    return this.getData('/schedule/appointment/remove', { id })
+  }
 }
 
 export default new ScheduleAPI();

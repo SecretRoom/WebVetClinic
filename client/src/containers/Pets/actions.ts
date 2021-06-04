@@ -20,6 +20,9 @@ import {
   ADD_TO_SCHEDULE_REQUEST,
   ADD_TO_SCHEDULE_SUCCESS,
   ADD_TO_SCHEDULE_ERROR,
+  REMOVE_FROM_SCHEDULE_REQUEST,
+  REMOVE_FROM_SCHEDULE_SUCCESS,
+  REMOVE_FROM_SCHEDULE_ERROR,
 } from './types'
 
 export const getPetsA = createAsyncAction(
@@ -76,4 +79,12 @@ export const addToScheduleA = createAsyncAction(
   ADD_TO_SCHEDULE_ERROR,
 )<
   any, undefined, Error
+>()
+
+export const removeFromScheduleA = createAsyncAction(
+  REMOVE_FROM_SCHEDULE_REQUEST,
+  REMOVE_FROM_SCHEDULE_SUCCESS,
+  REMOVE_FROM_SCHEDULE_ERROR,
+)<
+  string, undefined, Error
 >()

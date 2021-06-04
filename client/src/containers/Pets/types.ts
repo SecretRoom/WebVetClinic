@@ -22,6 +22,10 @@ export const ADD_TO_SCHEDULE_REQUEST = 'add/toSchedule:request'
 export const ADD_TO_SCHEDULE_SUCCESS = 'add/toSchedule:success'
 export const ADD_TO_SCHEDULE_ERROR = 'add/toSchedule:error'
 
+export const REMOVE_FROM_SCHEDULE_REQUEST = 'remove/fromSchedule:request'
+export const REMOVE_FROM_SCHEDULE_SUCCESS = 'remove/fromSchedule:success'
+export const REMOVE_FROM_SCHEDULE_ERROR = 'remove/fromSchedule:error'
+
 export const SELECT_PET = 'select/pet'
 
 export const RESET_SELECTED_PET = 'reset/selectedPet'

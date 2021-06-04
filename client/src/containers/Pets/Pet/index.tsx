@@ -6,7 +6,7 @@ import { Button, Card, Icon, Popup, Segment, Table } from 'semantic-ui-react'
 import moment from 'moment'
 import ScheduleAPI from '../../../services/API/Schedule'
 import Pet from '../../../components/Pets/Pet'
-import { addToScheduleA, getScheduleAppointmentA, getScheduleServiceA, selectPetA } from '../actions'
+import { addToScheduleA, getScheduleAppointmentA, getScheduleServiceA, removeFromScheduleA, selectPetA } from '../actions'
 import {
   appointmentsS,
   isFetchingAppointmentsS,
@@ -28,9 +28,10 @@ type PetContainerProps = {
   petInfo: any
   appointments: any[]
 
-  addToSchedule: (data: any) => void
   getScheduleService: () => void
+  addToSchedule: (data: any) => void
   getScheduleAppointment: () => void
+  removeFromSchedule: (id: string) => void
 }
 
 const PetContainer = ({
@@ -42,6 +43,7 @@ const PetContainer = ({
 
   addToSchedule,
   getScheduleService,
+  removeFromSchedule,
   getScheduleAppointment,
 }: PetContainerProps): ReactElement => {
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -69,6 +71,19 @@ const PetContainer = ({
             <Card.Description>{item.emplProfName}</Card.Description>
             <Card.Description>{item.empl}</Card.Description>
           </Card.Content>
+          {moment(item.date).isSameOrAfter(moment().format('DD.MM.YYYY HH:mm'), 'minute')
+            && (
+              <div className="remove-card">
+                <Icon
+                  link
+                  size="big"
+                  name="remove"
+                  className="remove-card__icon"
+                  onClick={(): void => removeFromSchedule(item.id)}
+                />
+              </div>
+            )
+          }
           <Card.Content>
             <Card.Header>Дата и время приема</Card.Header>
             <Card.Description>{item.date}</Card.Description>
@@ -440,6 +455,7 @@ export default connect(
   }),
   {
     addToSchedule: addToScheduleA.request,
+    removeFromSchedule: removeFromScheduleA.request,
     getScheduleService: getScheduleServiceA.request,
     getScheduleAppointment: getScheduleAppointmentA.request,
   },

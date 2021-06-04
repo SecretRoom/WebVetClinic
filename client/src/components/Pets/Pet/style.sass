@@ -74,28 +74,47 @@
         .ui.header
           color: $second_dark_color
           margin: 0
+      .cards__no-data
+        margin: 0 !important
+        &__header
+          display: grid !important
+          grid-template-rows: repeat(2, max-content)
+          align-content: center
+          margin: 0 !important
+          width: 100%
       .cards
         display: grid !important
         width: 100% !important
         height: 100% !important
-        margin: 0 !important
         grid-gap: 20px
-        overflow-y: overlay !important
+        margin: 0 !important
+        overflow-y: auto !important
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
         grid-template-rows: repeat(auto-fill, 350px)
         justify-content: start !important
-        .no-data
-          display: grid !important
-          grid-template-rows: repeat(2, max-content)
-          align-content: center
-          margin: 0
-          width: 100%
         .card
           display: grid !important
           grid-template-rows: .6fr max-content max-content 1fr
           margin: 0 !important
           width: 100% !important
           height: 350px
+          .remove-card
+            position: absolute
+            right: 0
+            border: 26px solid transparent
+            border-top: 26px solid #f8ba78
+            border-right: 26px solid #f8ba78
+            &__icon
+              position: absolute
+              top: -25px
+              right: -31px
+              // height: max-content
+              // width: max-content
+              // &::before
+              //   margin-top: 1px
+              //   margin-right: 4px
+              //   top: 0
+              //   right: 0
           .content
           .header
             color: $second_dark_color !important

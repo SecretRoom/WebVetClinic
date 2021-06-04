@@ -24,10 +24,10 @@ class IndexedDB {
           await R.forEachObjIndexed(async (list, nameDS) => {
             this.tx = await dataBase.transaction(nameDS, 'readwrite')
             list.forEach(async (item) => {
-              await this.tx.store.add({
-                ...item,
+              await this.tx.store.add(R.omit(['_id'], {
                 id: item._id || item.id || item.idEmpl,
-              })
+                ...item,
+              }))
             })
             await this.tx.done
           }, stores)

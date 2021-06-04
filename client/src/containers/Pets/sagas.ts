@@ -3,7 +3,16 @@ import { SagaIterator } from 'redux-saga';
 import * as R from 'ramda'
 
 import { ActionType } from 'typesafe-actions';
-import { createPetA, updatePetA, getPetsA, selectPetA, getScheduleAppointmentA, getScheduleServiceA, addToScheduleA } from './actions';
+import {
+  createPetA,
+  updatePetA,
+  getPetsA,
+  selectPetA,
+  getScheduleAppointmentA,
+  getScheduleServiceA,
+  addToScheduleA,
+  removeFromScheduleA,
+} from './actions';
 import { userIDS } from '../Auth/selectors';
 import PetsAPI from '../../services/API/Pets'
 import ScheduleAPI from '../../services/API/Schedule'
@@ -126,11 +135,25 @@ function* addToScheduleSaga(action: ActionType<typeof addToScheduleA.request>): 
   }
 }
 
+function* removeFromScheduleSaga(action: ActionType<typeof removeFromScheduleA.request>): SagaIterator {
+  try {
+    const { status } = yield call([ScheduleAPI, ScheduleAPI.removeFromSchedule], action.payload)
+    if (status !== '1') {
+      yield put(removeFromScheduleA.success())
+      yield put(getScheduleServiceA.request())
+      yield put(getScheduleAppointmentA.request())
+    }
+  } catch (error) {
+    yield put(removeFromScheduleA.failure(error))
+  }
+}
+
 export default function* (): SagaIterator {
   yield takeEvery(getPetsA.request, getPetsSaga)
   yield takeEvery(createPetA.request, createPetSaga)
   yield takeEvery(updatePetA.request, updatePetSaga)
   yield takeEvery(addToScheduleA.request, addToScheduleSaga)
+  yield takeEvery(removeFromScheduleA.request, removeFromScheduleSaga)
   yield takeEvery(getScheduleServiceA.request, getScheduleServiceSaga)
   yield takeEvery(getScheduleAppointmentA.request, getScheduleAppointmentSaga)
 }

@@ -4,10 +4,11 @@ import {
 } from 'react-router-dom'
 
 import TestPage from '../modules/TestPage'
+import PetsPage from '../modules/PetsPage/index.tsx'
 import LoginPage from '../modules/LoginPage/index.tsx'
+import StaffPage from '../modules/StaffPage/index.tsx'
 import UserDataPage from '../modules/UserDataPage/index.tsx'
 import RegistryPage from '../modules/RegistryPage/index.tsx'
-import PetsPage from '../modules/PetsPage/index.tsx'
 
 const routes = [
   {
@@ -24,9 +25,22 @@ const routes = [
     exact: true,
   },
   {
-    title: 'Личный кабинет',
+    title: 'Личный кабинет / Питомцы',
     path: '/user/data',
     component: UserDataPage,
+    rights: {
+      show: '',
+      edit: '',
+    },
+    profile: 'ALL',
+    showNavLink: true,
+    isPrivate: false,
+    exact: true,
+  },
+  {
+    title: 'Сотрудники',
+    path: '/staff',
+    component: StaffPage,
     rights: {
       show: '',
       edit: '',
