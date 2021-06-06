@@ -7,6 +7,11 @@ import { userIDS } from '../Auth/selectors';
 import UserDataAPI from '../../services/API/UserData'
 import { logoutA } from '../Auth/actions';
 import { getPetsA } from '../Pets/actions';
+import IndexedDB from '../../services/IndexedDB'
+
+import StaffAPI from '../../services/API/Staff'
+import DirectoriesAPI from '../../services/API/Directories'
+import { NAME_INDEXED_DB } from '../../config'
 
 function* getUserDataSaga(): SagaIterator {
   try {
@@ -14,8 +19,31 @@ function* getUserDataSaga(): SagaIterator {
     if (userID) {
       const { status, data } = yield call([UserDataAPI, UserDataAPI.getUserData], userID)
       if (status !== '1') {
-        yield put(getUserDataA.success(data))
-        yield put(getPetsA.request())
+        const dataStaff = yield call([StaffAPI, StaffAPI.getStaff], {})
+        const dataProfile = yield call([DirectoriesAPI, DirectoriesAPI.getProfile])
+        const dataServices = yield call([DirectoriesAPI, DirectoriesAPI.getServices])
+        const dataCategory = yield call([DirectoriesAPI, DirectoriesAPI.getCategory])
+
+        if (
+          dataStaff.status !== '1'
+          && dataProfile.status !== '1'
+          && dataServices.status !== '1'
+          && dataCategory.status !== '1'
+        ) {
+          IndexedDB.createDB(
+            NAME_INDEXED_DB.nameDB,
+            {
+              [NAME_INDEXED_DB.nameDS.staff]: dataStaff.items,
+              [NAME_INDEXED_DB.nameDS.profile]: dataProfile.items,
+              [NAME_INDEXED_DB.nameDS.services]: dataServices.items,
+              [NAME_INDEXED_DB.nameDS.category]: dataCategory.items,
+            },
+            NAME_INDEXED_DB.version,
+          )
+
+          yield put(getUserDataA.success(data))
+          yield put(getPetsA.request())
+        }
       } else {
         yield put(logoutA())
       }
