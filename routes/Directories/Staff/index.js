@@ -90,6 +90,38 @@ router.post(
       if (!staff) {
         return res.status(400).json({ status: '1', message: 'Сотрудников нет' })
       }
+      const photo = [
+        'ade.jpg',
+        'chris.jpg',
+        'christian.jpg',
+        'daniel.jpg',
+        'elliot.jpg',
+        'elyse.png',
+        'helen.jpg',
+        'jenny.jpg',
+        'joe.jpg',
+        'justen.jpg',
+        'kristy.png',
+        'laura.jpg',
+        'matt.jpg',
+        'matthew.png',
+        'molly.png',
+        'nan.jpg',
+        'nom.jpg',
+        'patrick.png',
+        'rachel.png',
+        'steve.jpg',
+        'stevie.jpg',
+        'tom.jpg',
+        'veronika.jpg',
+        'zoe.jpg',
+      ]
+      const getRandomPhoto = () => {
+        const min = Math.ceil(0);
+        const max = Math.floor(23);
+        return `https://react.semantic-ui.com/images/avatar/large/${photo[Math.floor(Math.random() * (max - min + 1)) + min]}`
+      }
+  
       res.status(200).json({
         items: R.map((item) => ({
           id: item.id,
@@ -98,6 +130,7 @@ router.post(
           prize: item.prize,
           idCat: item.idCat,
           idProf: item.idProf,
+          src: getRandomPhoto(),
           profName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idProf))(profile) || { name: '' })).name,
           catName: JSON.parse(JSON.stringify(R.find(R.propEq('id', item.idCat))(category) || { name: '' })).name,
         }), staff), status: '0'

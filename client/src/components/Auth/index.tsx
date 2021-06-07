@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
-import { Button, Checkbox, Form, Icon } from 'semantic-ui-react'
+import { Button, Checkbox, Input, Icon } from 'semantic-ui-react'
 import * as R from 'ramda'
 
 import './style.sass'
@@ -32,65 +32,55 @@ const Login = ({
   handleClickEye,
 }: LoginProps): ReactElement => (
   <main className="auth">
-    <Form className="login_form" onSubmit={(e: any): any => onSubmit(e)}>
-      <Form.Field className="label_title">
-        <h1>
-          АВТОРИЗАЦИЯ
-        </h1>
-      </Form.Field>
-      <Form.Field>
-        <Form.Input
-          error={
-            errorName
-              ? null
-              : { content: 'Пожалуйста, введите логин', pointing: 'below' }
-          }
-          fluid
-          id="username"
-          onChange={(e: SyntheticEvent, data: any): void => handleChange(e as never, data)}
-          value={userName}
-          placeholder="Логин"
-        />
-      </Form.Field>
-      <Form.Field>
-        <Form.Input
-          error={
-            errorPass
-              ? null
-              : 'Пожалуйста, введите пароль'
-          }
-          fluid
-          type={hiddenPassword ? 'password' : 'text'}
-          id="password"
-          icon={(
-            <Icon
-              link
-              onClick={handleClickEye}
-              name={hiddenPassword ? 'eye slash' : 'eye'}
+    <div className="auth-background">
+      <div className="content">
+        <div className="login_form" onSubmit={(e: any): any => onSubmit(e)}>
+          <h2>
+            Авторизация
+          </h2>
+          <Input
+            fluid
+            id="username"
+            onChange={(e: SyntheticEvent, data: any): void => handleChange(e as never, data)}
+            value={userName}
+            placeholder="Логин"
+          />
+          <Input
+            fluid
+            type={hiddenPassword ? 'password' : 'text'}
+            id="password"
+            icon={(
+              <Icon
+                link
+                onClick={handleClickEye}
+                name={hiddenPassword ? 'eye slash' : 'eye'}
+              />
+              )}
+            autoComplete="on"
+            value={password}
+            onChange={(e: any, data: any): any => handleChange(e, data)}
+            placeholder="Пароль"
+          />
+          <Checkbox label="Запомнить" />
+          <Button.Group className="btn_in">
+            <Button
+              content="Вход"
+              className="sing-in"
+              disabled={R.isEmpty(password) || R.isEmpty(userName)}
             />
-          )}
-          autoComplete="on"
-          value={password}
-          onChange={(e: any, data: any): any => handleChange(e, data)}
-          placeholder="Пароль"
-        />
-      </Form.Field>
-      <Form.Field className="btn_in">
-        <Checkbox label="Запомнить" />
-        <Button
-          content="Вход"
-          primary
-          type="submit"
-          disabled={R.isEmpty(password) || R.isEmpty(userName)}
-        />
-        <Button
-          content="Регистрация"
-          primary
-          as={NavLink}
-          to="/registry"
-        />
-      </Form.Field>
-    </Form>
+            <Button.Or />
+            <Button
+              as={NavLink}
+              to="/registry"
+              className="sing-up"
+              content="Регистрация"
+            />
+          </Button.Group>
+        </div>
+        <div className="logo" />
+      </div>
+
+    </div>
   </main>
 )
 

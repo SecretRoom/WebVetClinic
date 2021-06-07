@@ -119,7 +119,7 @@ function* getScheduleServiceSaga(): SagaIterator {
 function* addToScheduleSaga(action: ActionType<typeof addToScheduleA.request>): SagaIterator {
   try {
     const userID = yield select(state => userIDS(state))
-    const petID = yield select(state => selectedPetIDS(state))
+    const petID = action.payload.petID ? action.payload.petID : yield select(state => selectedPetIDS(state))
     const { status } = yield call([ScheduleAPI, ScheduleAPI.addToSchedule], {
       petID,
       ownerID: userID,
