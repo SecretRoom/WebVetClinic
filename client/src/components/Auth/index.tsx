@@ -12,63 +12,59 @@ type LoginProps = {
 
   hiddenPassword: boolean
 
-  errorName: any[]
-  errorPass: any[]
-
-  onSubmit: (e: any) => void
-  handleChange: (e: SyntheticEvent, data: any) => void
   handleClickEye: () => void
+  handleSignIn: (e: any) => void
+  handleChange: (e: SyntheticEvent, data: any) => void
 }
 
 const Login = ({
   password,
   userName,
-  errorName,
-  errorPass,
   hiddenPassword,
 
-  onSubmit,
+  handleSignIn,
   handleChange,
   handleClickEye,
 }: LoginProps): ReactElement => (
   <main className="auth">
     <div className="auth-background">
       <div className="content">
-        <div className="login_form" onSubmit={(e: any): any => onSubmit(e)}>
+        <div className="login_form">
           <h2>
             Авторизация
           </h2>
           <Input
             fluid
             id="username"
-            onChange={(e: SyntheticEvent, data: any): void => handleChange(e as never, data)}
             value={userName}
             placeholder="Логин"
+            onChange={(e: SyntheticEvent, data: any): void => handleChange(e as never, data)}
           />
           <Input
             fluid
-            type={hiddenPassword ? 'password' : 'text'}
             id="password"
+            value={password}
+            autoComplete="on"
+            placeholder="Пароль"
+            type={hiddenPassword ? 'password' : 'text'}
+            onChange={(e: any, data: any): any => handleChange(e, data)}
             icon={(
               <Icon
                 link
                 onClick={handleClickEye}
                 name={hiddenPassword ? 'eye slash' : 'eye'}
               />
-              )}
-            autoComplete="on"
-            value={password}
-            onChange={(e: any, data: any): any => handleChange(e, data)}
-            placeholder="Пароль"
+            )}
           />
           <Checkbox label="Запомнить" />
           <Button.Group className="btn_in">
             <Button
               content="Вход"
               className="sing-in"
+              onClick={(e: any): void => handleSignIn(e)}
               disabled={R.isEmpty(password) || R.isEmpty(userName)}
             />
-            <Button.Or />
+            <Button.Or text="|" />
             <Button
               as={NavLink}
               to="/registry"

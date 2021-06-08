@@ -7,6 +7,7 @@ import TestPage from '../modules/TestPage'
 import PetsPage from '../modules/PetsPage/index.tsx'
 import LoginPage from '../modules/LoginPage/index.tsx'
 import StaffPage from '../modules/StaffPage/index.tsx'
+import ServicesPage from '../modules/ServicesPage/index.tsx'
 import UserDataPage from '../modules/UserDataPage/index.tsx'
 import RegistryPage from '../modules/RegistryPage/index.tsx'
 
@@ -41,6 +42,19 @@ const routes = [
     title: 'Сотрудники',
     path: '/staff',
     component: StaffPage,
+    rights: {
+      show: '',
+      edit: '',
+    },
+    profile: 'ALL',
+    showNavLink: true,
+    isPrivate: false,
+    exact: true,
+  },
+  {
+    title: 'Услуги',
+    path: '/services',
+    component: ServicesPage,
     rights: {
       show: '',
       edit: '',

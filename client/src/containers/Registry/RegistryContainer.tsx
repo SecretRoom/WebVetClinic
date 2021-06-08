@@ -23,7 +23,7 @@ const RegistryContainer = ({
 
   const [hiddenPassword, setHiddenPassword] = useState<boolean>(true)
 
-  const onSubmit = (e: any): void => {
+  const handleSignUp = (e: any): void => {
     e.preventDefault()
     sessionStorage.setItem('login', phone || '')
     registry({
@@ -97,7 +97,7 @@ const RegistryContainer = ({
       error={error}
       birthday={birthday}
       hiddenPassword={hiddenPassword}
-      onSubmit={onSubmit}
+      handleSignUp={handleSignUp}
       handleChangeInputs={handleChangeInputs}
       handleClickEye={handleClickEye}
     />

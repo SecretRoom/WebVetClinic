@@ -2,170 +2,75 @@
 import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
-import { Button, Card, Icon, Image, Popup, Table } from 'semantic-ui-react'
+import { Button, Icon, Image, Popup, Table } from 'semantic-ui-react'
 import moment from 'moment'
 import ScheduleAPI from '../../services/API/Schedule'
-import Staff from '../../components/Staff'
+import Services from '../../components/Services'
 import getStore from '../../services/IndexedDB/getStore'
 import { addToScheduleA, getScheduleAppointmentA } from '../Pets/actions'
 import { petsS } from '../Pets/selectors'
 
-type StaffContainerProps = {
+type ServicesContainerProps = {
   pets: any[]
 
   addToSchedule: (data: any) => void
   getScheduleAppointment: () => void
 }
 
-const StaffContainer = ({
+const ServicesContainer = ({
   pets,
 
   addToSchedule,
   getScheduleAppointment,
-}:StaffContainerProps): ReactElement => {
+}:ServicesContainerProps): ReactElement => {
   const [pet, setPet] = useState<string>('')
-  const [name, setName] = useState<string>('')
-  const [surname, setSurname] = useState<string>('')
-  const [profile, setProfile] = useState<string>('')
-  const [category, setCategory] = useState<string>('')
-  const [fullName, setFullName] = useState<string>('')
-  const [patronymic, setPatronymic] = useState<string>('')
-
-  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [sortColumn, setSortColumn] = useState<string>('')
+  const [selectedEmpl, setSelectedEmpl] = useState<string>('')
+  const [sortDirection, setSortDirection] = useState<'ascending' | 'descending' | undefined>(undefined)
 
   const [scheduleDate, setScheduleDate] = useState<Date>()
   const [selectDate, setSelectDate] = useState<Date | null>(null)
 
-  const [service, setService] = useState<any[]>([])
-  const [selectedEmpl, setSelectedEmpl] = useState<any>({})
   const [servicesList, setServicesList] = useState<any[]>([])
   const [servicesListDef, setServicesListDef] = useState<any[]>([])
+  const [selectedServices, setSelectedServices] = useState<any[]>([])
   const [scheduleAppointment, setScheduleAppointment] = useState<any[]>([])
 
-  const [isFetching, setIsFetching] = useState<boolean>(true)
-  const [openFullFilter, setOpenFullFilter] = useState<boolean>(false)
-
   const [staffList, setStaffList] = useState<any[]>([])
-  const [profileList, setProfileList] = useState<any[]>([])
   const [staffListDef, setStaffListDef] = useState<any[]>([])
-  const [categoryList, setCategoryList] = useState<any[]>([])
 
-  const handleChangeOpenModal = (): void => setOpenModal(prev => !prev)
-
-  const handleResetFilter = (): void => {
-    setName('')
-    setSurname('')
-    setPatronymic('')
-    setProfile('')
-    setCategory('')
-    setStaffList(staffListDef)
+  const handleSortColumn = (field: string) => {
+    if (field === sortColumn) {
+      setSortDirection(prev => (prev === 'ascending' ? 'descending' : 'ascending'))
+    } else {
+      setSortColumn(field)
+      setSortDirection('ascending')
+    }
   }
 
-  const handleUpdateList = (): void => {
-    setIsFetching(true)
-    const includesSurname = (elem: string) => (!R.isEmpty(surname) ? R.includes(R.toLower(surname), R.toLower(elem)) : true)
-    const includesName = (elem: string) => (!R.isEmpty(name) ? R.includes(R.toLower(name), R.toLower(elem)) : true)
-    const includesPatronymic = (elem: string) => (!R.isEmpty(patronymic) ? R.includes(R.toLower(patronymic), R.toLower(elem)) : true)
-    const includesProfile = (elem: string) => (!R.isEmpty(profile) ? profile === elem : true)
-    const includesCategory = (elem: string) => (!R.isEmpty(category) ? category === elem : true)
-    if (openFullFilter) {
-      setStaffList(
-        R.filter(
-          (item) => includesSurname(R.split(' ', item.fioEmpl)[0])
-            && includesName(R.split(' ', item.fioEmpl)[1])
-            && includesPatronymic(R.split(' ', item.fioEmpl)[2])
-            && includesProfile(item.idProf)
-            && includesCategory(item.idCat),
-          staffListDef,
-        ),
+  const handleSelectService = (e: PointerEvent, newSelectedID: string): void => {
+    if (e.ctrlKey) {
+      setSelectedServices(
+        prev => (R.includes(newSelectedID, prev)
+          ? R.filter((id) => id !== newSelectedID, prev)
+          : R.append(newSelectedID, prev)),
       )
     } else {
-      setStaffList(
-        R.filter(
-          (item) => R.includes(R.toLower(fullName), R.toLower(item.fioEmpl)),
-          staffListDef,
-        ),
-      )
+      setSelectedServices([newSelectedID])
     }
   }
 
-  const handleChangeFullFilter = (): void => setOpenFullFilter(prev => !prev)
-
-  const handleChangeInputs = (e: SyntheticEvent, field: string, value: any): void => {
-    switch (field) {
-      case 'name':
-        if (!R.test(/[^a-zа-я]+/gi, value) || R.isEmpty(value)) {
-          setName(value)
-        }
-        break
-      case 'surname':
-        if (!R.test(/[^a-zа-я]+/gi, value) || R.isEmpty(value)) {
-          setSurname(value)
-        }
-        break
-      case 'patronymic':
-        if (!R.test(/[^a-zа-я]+/gi, value) || R.isEmpty(value)) {
-          setPatronymic(value)
-        }
-        break
-      case 'fullName':
-        if (!R.isEmpty(value)) {
-          if (!R.test(/[^a-zа-я\s]+/gi, value)) {
-            if (R.includes(R.match(/\s/gi, value).length, [0, 1, 2])) {
-              setFullName(value)
-            }
-          }
-        } else {
-          setFullName(value)
-        }
-        break
-      case 'profile':
-        setProfile(value)
-        break
-      case 'category':
-        setCategory(value)
-        break
-      default:
-        break;
-    }
-  }
-
-  const createStaffCard = (list: any[]): ReactElement[] => R.map((item: any) => (
-    <Card
-      raised
+  const createServicesRow = (list: any[]): ReactElement[] => R.map((item: any) => (
+    <Table.Row
       key={Math.random()}
-      className="staff-cards__card"
+      active={R.includes(item.id, selectedServices)}
+      onClick={(e: PointerEvent): void => handleSelectService(e, item.id)}
+      // className="services-cards__card"
     >
-      <Image
-        fluid
-        className="staff-cards__card-image"
-        src={item.src}
-      />
-      <div className="staff-cards__card-data">
-        <div className="field">
-          <h4>ФИО</h4>
-          <span>{item.fioEmpl}</span>
-        </div>
-        <div className="row">
-          <div className="field">
-            <h4>Профиль</h4>
-            <span>{item.profName}</span>
-          </div>
-          <div className="field">
-            <h4>Категория</h4>
-            <span>{item.catName}</span>
-          </div>
-        </div>
-        <div className="field">
-          <h4>Образование</h4>
-          <span>{item.education}</span>
-        </div>
-        <div className="field">
-          <h4>Награды</h4>
-          <span>{item.prize}</span>
-        </div>
-      </div>
-      <div className="sign-button">
+      <Table.Cell>{item.name}</Table.Cell>
+      <Table.Cell>{item.price}</Table.Cell>
+      <Table.Cell>{item.info || 'Информация об услуге'}</Table.Cell>
+      {/* <div className="sign-button">
         <Popup
           position="top center"
           content="Записаться"
@@ -182,12 +87,12 @@ const StaffContainer = ({
             />
           )}
         />
-      </div>
-    </Card>
+      </div> */}
+    </Table.Row>
   ), list)
 
-  const handleChangeService = (e: SyntheticEvent, value: any[]): void => {
-    setService(value)
+  const handleChangeEmpl = (e: SyntheticEvent, value: string): void => {
+    setSelectedEmpl(value)
   }
 
   const handleChangePet = (e: SyntheticEvent, value: string): void => {
@@ -196,7 +101,7 @@ const StaffContainer = ({
 
   const createScheduleAppointment = (): ReactElement => {
     const scheduleAppointmentDate = R.map(
-      (elem: any) => elem.date, R.filter((item) => item.emplID === selectedEmpl.id, scheduleAppointment),
+      (elem: any) => elem.date, R.filter((item) => item.emplID === selectedEmpl, scheduleAppointment),
     )
     const scheduleAppointmentDatePet = R.map(
       (elem: any) => elem.date, R.filter((item: any) => item.petID === pet, scheduleAppointment),
@@ -330,7 +235,7 @@ const StaffContainer = ({
                 </div>
                 <div>
                   <span>Итоговая сумма приема: </span>
-                  <span>{R.add(R.sum(findServicePrice(service)), 700)}</span>
+                  {/* <span>{R.add(R.sum(findServicePrice(service)), 700)}</span> */}
                 </div>
               </div>
               <Button
@@ -429,135 +334,71 @@ const StaffContainer = ({
   }
 
   const handleClickSave = (): void => {
-    addToSchedule({
-      petID: pet,
-      emplID: selectedEmpl.id,
-      date: selectDate,
-      serviceID: service,
-    })
-    handleChangeOpenModal()
+    // addToSchedule({
+    //   petID: pet,
+    //   emplID: selectedEmpl.id,
+    //   date: selectDate,
+    //   // serviceID: service,
+    // })
   }
 
   useEffect(() => {
-    if (!fullName) handleUpdateList()
-  }, [fullName])
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ file: ServicesContainer.tsx ~ line 344 ~ useEffect ~ sortDirection', sortColumn);
+    const byDirection = sortDirection === 'ascending' ? R.ascend(R.prop(sortColumn)) : R.descend(R.prop(sortColumn))
+    setServicesList(prev => R.sort(byDirection, prev))
+  }, [sortColumn, sortDirection])
 
   useEffect(() => {
-    const listener = (event: any) => {
-      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        handleUpdateList()
-      }
-    }
-    document.addEventListener('keydown', listener)
-    return () => {
-      document.removeEventListener('keydown', listener)
-    }
-  }, [
-    name,
-    surname,
-    profile,
-    category,
-    fullName,
-    patronymic,
-  ])
-
-  useEffect(() => {
-    if (!R.isEmpty(selectedEmpl)) {
-      setServicesList(R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef))
-      if (!R.isEmpty(service)) {
-        setService(
-          prev => R.filter(
-            (item) => !!R.find(R.propEq('id', item), R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef)),
-            prev,
-          ),
-        )
-      }
-    } else {
-      setServicesList(servicesListDef)
-    }
-    setSelectDate(null)
+    // if (!R.isEmpty(selectedEmpl)) {
+    //   setServicesList(R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef))
+    //   if (!R.isEmpty(service)) {
+    //     setService(
+    //       prev => R.filter(
+    //         (item) => !!R.find(R.propEq('id', item), R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef)),
+    //         prev,
+    //       ),
+    //     )
+    //   }
+    // } else {
+    //   setServicesList(servicesListDef)
+    // }
+    // setSelectDate(null)
   }, [selectedEmpl])
-
-  useEffect(() => {
-    if (!openFullFilter) handleResetFilter()
-  }, [openFullFilter])
-
-  useEffect(() => {
-    setIsFetching(false)
-  }, [staffList])
 
   useEffect(() => {
     setStaffList(staffListDef)
   }, [staffListDef])
 
   useEffect(() => {
-    if (!openModal) {
-      setPet('')
-      setService([])
-      setSelectedEmpl({})
-      setSelectDate(null)
-      setScheduleDate(moment().toDate())
-    } else {
-      ScheduleAPI.getAppointment('').then((res: any) => {
-        setScheduleAppointment(res.items)
-      })
-    }
-  }, [openModal])
-
-  useEffect(() => {
-    setServicesList(servicesListDef)
-  }, [servicesListDef])
-
-  useEffect(() => {
-    getStore.profile(undefined).then(
-      (res) => setProfileList(R.map((item) => ({ value: item.id, key: item.id, text: item.name }), res)),
-    )
-    getStore.category(undefined).then(
-      (res) => setCategoryList(R.map((item) => ({ value: item.id, key: item.id, text: item.name }), res)),
-    )
-    getStore.staff(undefined).then(
-      (res) => setStaffListDef(res),
-    )
-    getStore.services(undefined).then((res) => {
-      setServicesListDef(R.map((item) => ({
+    getStore.staff(undefined).then((res) => {
+      setStaffListDef(R.map((item) => ({
         id: item.id,
         value: item.id,
-        text: item.name,
-        price: item.price,
-        staff: item.emplID,
-        content: `${item.name} - ${item.price}`,
+        text: item.fioEmpl,
+        content: `${item.fioEmpl} - ${item.profName}`,
       }), res))
     })
-    getScheduleAppointment()
+    const byName = R.ascend(R.prop('name'))
+    getStore.services(undefined).then((res) => setServicesList(R.sort(byName, R.map((item) => ({ ...item, price: +item.price }), res))))
+    ScheduleAPI.getAppointment('').then((res: any) => {
+      setScheduleAppointment(res.items)
+    })
   }, [])
 
   return (
-    <Staff
+    <Services
       pet={pet}
       pets={pets}
-      name={name}
-      surname={surname}
-      profile={profile}
-      service={service}
-      category={category}
-      fullName={fullName}
-      openModal={openModal}
       staffList={staffList}
-      patronymic={patronymic}
-      isFetching={isFetching}
-      profileList={profileList}
+      sortColumn={sortColumn}
       selectedEmpl={selectedEmpl}
       servicesList={servicesList}
-      categoryList={categoryList}
-      openFullFilter={openFullFilter}
-      createStaffCard={createStaffCard}
-      handleUpdateList={handleUpdateList}
+      sortDirection={sortDirection}
       handleChangePet={handleChangePet}
-      handleResetFilter={handleResetFilter}
-      handleChangeInputs={handleChangeInputs}
-      handleChangeService={handleChangeService}
-      handleChangeOpenModal={handleChangeOpenModal}
-      handleChangeFullFilter={handleChangeFullFilter}
+      handleSortColumn={handleSortColumn}
+      handleChangeEmpl={handleChangeEmpl}
+      createServicesRow={createServicesRow}
       createScheduleAppointment={createScheduleAppointment}
     />
   )
@@ -571,4 +412,4 @@ export default connect(
     addToSchedule: addToScheduleA.request,
     getScheduleAppointment: getScheduleAppointmentA.request,
   },
-)(StaffContainer)
+)(ServicesContainer)
