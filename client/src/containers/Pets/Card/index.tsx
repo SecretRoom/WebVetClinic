@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import * as R from 'ramda'
 import moment from 'moment'
 
-import { Button, Dropdown, Image, Input, Segment } from 'semantic-ui-react'
+import { Button, Image, Segment } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom'
 import PetsCard from '../../../components/Pets/Card'
 import { isFetchingPetsS, petsS } from '../selectors'
@@ -181,22 +181,20 @@ const PetsCardContainer = ({
               style={{
                 display: 'grid',
                 gridColumnGap: '5px',
-                width: 'max-content',
+                width: '100%',
                 height: 'max-content',
-                gridTemplateColumns: 'repeat(2, max-content)',
+                gridTemplateColumns: 'repeat(2, 1fr)',
                 alignItems: 'center',
               }}
             >
               <div
                 className="field"
-                style={{ width: '82px' }}
               >
                 <span>Вес</span>
                 <span>{pet.weight} кг</span>
               </div>
               <div
                 className="field"
-                style={{ width: '82px' }}
               >
                 <span>Рост</span>
                 <span>{pet.height} см</span>

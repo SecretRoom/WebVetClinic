@@ -3,10 +3,8 @@ import React, { ReactElement, SyntheticEvent } from 'react'
 import {
   Button,
   Segment,
-  Form,
   Input,
   Icon,
-  Popup,
   Dropdown,
   Modal,
 } from 'semantic-ui-react'
@@ -282,7 +280,6 @@ const Staff = ({
         )}
       />
     </Modal>
-
   </div>
 )
 

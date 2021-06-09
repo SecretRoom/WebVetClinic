@@ -61,6 +61,16 @@ const StaffContainer = ({
     setStaffList(staffListDef)
   }
 
+  const handleClickSave = (): void => {
+    addToSchedule({
+      petID: pet,
+      emplID: selectedEmpl.id,
+      date: selectDate,
+      serviceID: service,
+    })
+    handleChangeOpenModal()
+  }
+
   const handleUpdateList = (): void => {
     setIsFetching(true)
     const includesSurname = (elem: string) => (!R.isEmpty(surname) ? R.includes(R.toLower(surname), R.toLower(elem)) : true)
@@ -426,16 +436,6 @@ const StaffContainer = ({
         </Table.Footer>
       </Table>
     )
-  }
-
-  const handleClickSave = (): void => {
-    addToSchedule({
-      petID: pet,
-      emplID: selectedEmpl.id,
-      date: selectDate,
-      serviceID: service,
-    })
-    handleChangeOpenModal()
   }
 
   useEffect(() => {

@@ -105,7 +105,7 @@ const RegistryContainer = ({
 }
 
 export default connect(
-  (state) => ({}),
+  () => ({}),
   {
     registry: registryA.request,
   },

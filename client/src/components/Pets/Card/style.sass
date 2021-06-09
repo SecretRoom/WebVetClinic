@@ -7,16 +7,16 @@
   height: 92vh
   grid-gap: 20px
   overflow-y: overlay
-  grid-template-columns: repeat(auto-fit, 490px)
+  grid-template-columns: repeat(auto-fit, 470px)
   grid-template-rows: repeat(auto-fit, 400px)
   .ui.segment
     margin: 0 !important
   .card
     display: grid !important
     border-radius: 5px !important
-    width: max-content !important
+    width: 100% !important
     height: max-content !important
-    grid-template-columns: 300px max-content
+    grid-template-columns: 300px 170px
     &:hover
       top: -3px
     .pet-photo
@@ -28,6 +28,7 @@
         border-radius: 5px 0 0 5px !important
     &-data
       display: grid
+      width: 100%
       grid-template-rows: max-content 1fr
       justify-items: center
       align-items: flex-end
@@ -37,17 +38,18 @@
         margin-bottom: 10px
       .fields
         grid-gap: 10px
-        width: max-content
+        width: 100%
         grid-template-rows: repeat(auto-fit, minmax(40px, max-content))
         display: grid
         .field
           display: grid
           height: max-content
-          width: 170px
+          width: 100%
           align-items: end
           grid-template-rows: repeat(2,max-content)
           border-bottom: 1px solid #a2a2a2 !important
           span
+            width: 100%
             &:first-child
               color: $second_dark_color
               font-weight: bold

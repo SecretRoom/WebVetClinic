@@ -2,26 +2,24 @@
 import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
-import { Button, Icon, Image, Popup, Table } from 'semantic-ui-react'
+import { Button, Icon, Popup, Table } from 'semantic-ui-react'
 import moment from 'moment'
 import ScheduleAPI from '../../services/API/Schedule'
 import Services from '../../components/Services'
 import getStore from '../../services/IndexedDB/getStore'
-import { addToScheduleA, getScheduleAppointmentA } from '../Pets/actions'
+import { addToScheduleA } from '../Pets/actions'
 import { petsS } from '../Pets/selectors'
 
 type ServicesContainerProps = {
   pets: any[]
 
   addToSchedule: (data: any) => void
-  getScheduleAppointment: () => void
 }
 
 const ServicesContainer = ({
   pets,
 
   addToSchedule,
-  getScheduleAppointment,
 }:ServicesContainerProps): ReactElement => {
   const [pet, setPet] = useState<string>('')
   const [sortColumn, setSortColumn] = useState<string>('')
@@ -32,7 +30,6 @@ const ServicesContainer = ({
   const [selectDate, setSelectDate] = useState<Date | null>(null)
 
   const [servicesList, setServicesList] = useState<any[]>([])
-  const [servicesListDef, setServicesListDef] = useState<any[]>([])
   const [selectedServices, setSelectedServices] = useState<any[]>([])
   const [scheduleAppointment, setScheduleAppointment] = useState<any[]>([])
 
@@ -48,6 +45,10 @@ const ServicesContainer = ({
     }
   }
 
+  const handleFetchAppointment = () => ScheduleAPI.getAppointment('').then((res: any) => {
+    setScheduleAppointment(res.items)
+  })
+
   const handleSelectService = (e: PointerEvent, newSelectedID: string): void => {
     if (e.ctrlKey) {
       setSelectedServices(
@@ -60,34 +61,30 @@ const ServicesContainer = ({
     }
   }
 
+  const handleClickSave = (): void => {
+    addToSchedule({
+      petID: pet,
+      emplID: selectedEmpl,
+      date: selectDate,
+      serviceID: selectedServices,
+    })
+    setSelectDate(null)
+    handleFetchAppointment()
+  }
+
   const createServicesRow = (list: any[]): ReactElement[] => R.map((item: any) => (
     <Table.Row
       key={Math.random()}
       active={R.includes(item.id, selectedServices)}
       onClick={(e: PointerEvent): void => handleSelectService(e, item.id)}
-      // className="services-cards__card"
     >
-      <Table.Cell>{item.name}</Table.Cell>
-      <Table.Cell>{item.price}</Table.Cell>
+      <Table.Cell width={5}>
+        {item.name}
+      </Table.Cell>
+      <Table.Cell width={3}>
+        {item.price}
+      </Table.Cell>
       <Table.Cell>{item.info || 'Информация об услуге'}</Table.Cell>
-      {/* <div className="sign-button">
-        <Popup
-          position="top center"
-          content="Записаться"
-          trigger={(
-            <Button
-              circular
-              icon="pencil"
-              size="massive"
-              color="orange"
-              onClick={(): void => {
-                setSelectedEmpl(item)
-                handleChangeOpenModal()
-              }}
-            />
-          )}
-        />
-      </div> */}
     </Table.Row>
   ), list)
 
@@ -136,8 +133,8 @@ const ServicesContainer = ({
     ).add(day, 'd').add(item * 30, 'minute').isSameOrAfter(moment())
 
     const isActive = (day: number, item: number): boolean => moment(
-      moment(scheduleDate).day(1).hours(10).minutes(0),
-    ).add(day, 'd').add(item * 30, 'minute').isSame(selectDate)
+        moment(scheduleDate).day(1).hours(10).minutes(0),
+      ).add(day, 'd').add(item * 30, 'minute').isSame(selectDate, 'minutes')
 
     const isDisabled = (day: number, item: number): boolean => R.isEmpty(pet)
       || isClose(
@@ -167,12 +164,12 @@ const ServicesContainer = ({
       (item: any) => +item.price,
       R.filter(
         (elem: any) => Boolean(R.includes(elem.id, selectService)),
-        servicesListDef,
+        servicesList,
       ),
     )
 
     return (
-      <Table definition celled>
+      <Table definition celled collapsing compact>
         <Table.Header>
           <Table.Row textAlign="center">
             <Table.HeaderCell>
@@ -205,10 +202,10 @@ const ServicesContainer = ({
               </Table.Cell>
               {R.map((day) => (
                 <Table.Cell
-                  selectable
+                  key={Math.random()}
                   negative={isNegative(day, item)}
                   positive={isPositive(day, item)}
-                  key={Math.random()}
+                  selectable={!R.isEmpty(selectedServices)}
                   onClick={(): void => {
                     setSelectDate(
                       moment(
@@ -228,104 +225,106 @@ const ServicesContainer = ({
         <Table.Footer fullWidth>
           <Table.Row>
             <Table.HeaderCell className="active">
-              <div>
+              <div className="active-text">
                 <div>
                   <span>Выбранная дата приема: </span>
                   <span>{selectDate && moment(selectDate).format('DD.MM.YYYY HH:mm').toString()}</span>
                 </div>
                 <div>
                   <span>Итоговая сумма приема: </span>
-                  {/* <span>{R.add(R.sum(findServicePrice(service)), 700)}</span> */}
+                  <span>{!R.isEmpty(selectedServices) && R.add(R.sum(findServicePrice(selectedServices)), 700)}</span>
                 </div>
               </div>
-              <Button
-                size="big"
-                icon="pencil"
-                content="Записаться"
-                disabled={R.isEmpty(pet) || R.isNil(selectDate)}
-                onClick={(): void => handleClickSave()}
-              />
-              <Button.Group size="big">
-                <Popup
-                  position="left center"
-                  content="Предыдущий месяц"
-                  trigger={(
-                    <Button
-                      icon
-                      disabled={moment().isSameOrAfter(scheduleDate, 'M')}
-                      onClick={(): void => {
+              <div className="active-button">
+                <Button
+                  size="big"
+                  icon="pencil"
+                  content="Записаться"
+                  disabled={R.isEmpty(pet) || R.isNil(selectDate)}
+                  onClick={(): void => handleClickSave()}
+                />
+                <Button.Group size="big">
+                  <Popup
+                    position="left center"
+                    content="Предыдущий месяц"
+                    trigger={(
+                      <Button
+                        icon
+                        disabled={moment().isSameOrAfter(scheduleDate, 'M')}
+                        onClick={(): void => {
                         setScheduleDate(
                           prev => moment(prev).add(-1, 'M')
                           .toDate(),
                         )
                       }}
-                    >
-                      <Icon name="angle double left" />
-                    </Button>
+                      >
+                        <Icon name="angle double left" />
+                      </Button>
                   )}
-                />
-                <Popup
-                  position="top right"
-                  content="Предыдущая неделя"
-                  trigger={(
-                    <Button
-                      icon
-                      disabled={moment().isSameOrAfter(scheduleDate, 'day')}
-                      onClick={(): void => {
+                  />
+                  <Popup
+                    position="top right"
+                    content="Предыдущая неделя"
+                    trigger={(
+                      <Button
+                        icon
+                        disabled={moment().isSameOrAfter(scheduleDate, 'day')}
+                        onClick={(): void => {
                         setScheduleDate(prev => moment(prev).add(-1, 'w').toDate())
                       }}
-                    >
-                      <Icon name="angle left" />
-                    </Button>
+                      >
+                        <Icon name="angle left" />
+                      </Button>
                   )}
-                />
-                <Popup
-                  position="top center"
-                  content="Текущая неделя"
-                  trigger={(
-                    <Button
-                      icon
-                      disabled={moment().isSame(scheduleDate, 'day')}
-                      onClick={(): void => {
+                  />
+                  <Popup
+                    position="top center"
+                    content="Текущая неделя"
+                    trigger={(
+                      <Button
+                        icon
+                        disabled={moment().isSame(scheduleDate, 'day')}
+                        onClick={(): void => {
                         setScheduleDate(moment().toDate())
                       }}
-                    >
-                      <Icon name="dot circle outline" />
-                    </Button>
+                      >
+                        <Icon name="dot circle outline" />
+                      </Button>
                   )}
-                />
-                <Popup
-                  position="top left"
-                  content="Следующая неделя"
-                  trigger={(
-                    <Button
-                      icon
-                      onClick={(): void => {
+                  />
+                  <Popup
+                    position="top left"
+                    content="Следующая неделя"
+                    trigger={(
+                      <Button
+                        icon
+                        onClick={(): void => {
                         setScheduleDate(prev => moment(prev).add(1, 'w').toDate())
                       }}
-                    >
-                      <Icon name="angle right" />
-                    </Button>
+                      >
+                        <Icon name="angle right" />
+                      </Button>
                   )}
-                />
-                <Popup
-                  position="right center"
-                  content="Следующий месяц"
-                  trigger={(
-                    <Button
-                      icon
-                      onClick={(): void => {
+                  />
+                  <Popup
+                    position="right center"
+                    content="Следующий месяц"
+                    trigger={(
+                      <Button
+                        icon
+                        onClick={(): void => {
                         setScheduleDate(
                           prev => moment(prev).add(1, 'M').date(1)
                           .toDate(),
                         )
                       }}
-                    >
-                      <Icon name="angle double right" />
-                    </Button>
+                      >
+                        <Icon name="angle double right" />
+                      </Button>
                   )}
-                />
-              </Button.Group>
+                  />
+                </Button.Group>
+              </div>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
@@ -333,38 +332,24 @@ const ServicesContainer = ({
     )
   }
 
-  const handleClickSave = (): void => {
-    // addToSchedule({
-    //   petID: pet,
-    //   emplID: selectedEmpl.id,
-    //   date: selectDate,
-    //   // serviceID: service,
-    // })
-  }
-
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('🚀 ~ file: ServicesContainer.tsx ~ line 344 ~ useEffect ~ sortDirection', sortColumn);
     const byDirection = sortDirection === 'ascending' ? R.ascend(R.prop(sortColumn)) : R.descend(R.prop(sortColumn))
     setServicesList(prev => R.sort(byDirection, prev))
   }, [sortColumn, sortDirection])
 
   useEffect(() => {
-    // if (!R.isEmpty(selectedEmpl)) {
-    //   setServicesList(R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef))
-    //   if (!R.isEmpty(service)) {
-    //     setService(
-    //       prev => R.filter(
-    //         (item) => !!R.find(R.propEq('id', item), R.filter((item) => Boolean(R.includes(selectedEmpl.id, item.staff)), servicesListDef)),
-    //         prev,
-    //       ),
-    //     )
-    //   }
-    // } else {
-    //   setServicesList(servicesListDef)
-    // }
-    // setSelectDate(null)
-  }, [selectedEmpl])
+    if (!R.isEmpty(selectedServices)) {
+      const staffService = R.map((item: any) => item.emplID, R.filter((elem) => R.includes(elem.id, selectedServices), servicesList))
+      setStaffList(R.filter((item) => R.all(R.includes(item.id))(staffService), staffListDef))
+    } else {
+      setStaffList(staffListDef)
+    }
+    setSelectedEmpl('')
+  }, [selectedServices])
+
+  useEffect(() => {
+    setSelectDate(null)
+  }, [selectedEmpl, pet])
 
   useEffect(() => {
     setStaffList(staffListDef)
@@ -381,9 +366,7 @@ const ServicesContainer = ({
     })
     const byName = R.ascend(R.prop('name'))
     getStore.services(undefined).then((res) => setServicesList(R.sort(byName, R.map((item) => ({ ...item, price: +item.price }), res))))
-    ScheduleAPI.getAppointment('').then((res: any) => {
-      setScheduleAppointment(res.items)
-    })
+    handleFetchAppointment()
   }, [])
 
   return (
@@ -396,6 +379,7 @@ const ServicesContainer = ({
       servicesList={servicesList}
       sortDirection={sortDirection}
       handleChangePet={handleChangePet}
+      selectedServices={selectedServices}
       handleSortColumn={handleSortColumn}
       handleChangeEmpl={handleChangeEmpl}
       createServicesRow={createServicesRow}
@@ -410,6 +394,5 @@ export default connect(
   }),
   {
     addToSchedule: addToScheduleA.request,
-    getScheduleAppointment: getScheduleAppointmentA.request,
   },
 )(ServicesContainer)

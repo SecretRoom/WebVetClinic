@@ -27,10 +27,8 @@ const LoginContainer = ({
 
   const handleSignIn = (e: any): void => {
     e.preventDefault()
-    // authenticated = true
     sessionStorage.setItem('login', userName || '')
     auth({ login: userName, password })
-    // getAppVersion()
   }
 
   const handleChange = (e: any, { id, value }: any): void => {

@@ -10,7 +10,6 @@ const router = Router()
 
 
 // /api/directories/staff/register
-// eslint-disable-next-line consistent-return
 router.post(
   '/create',
   [

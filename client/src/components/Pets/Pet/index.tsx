@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
-import DatePicker from 'react-datepicker';
-import { Button, Dropdown, Icon, Input, Segment, Loader, Image, Modal, Label, Card, Header, Divider, Popup } from 'semantic-ui-react'
+import { Button, Dropdown, Icon, Segment, Loader, Image, Modal, Card, Header } from 'semantic-ui-react'
 import * as R from 'ramda'
 import './style.sass'
 import moment from 'moment';

@@ -2,10 +2,7 @@
 const { Router } = require('express')
 const R = require('ramda');
 const fs = require('file-system');
-const moment = require('moment')
-const { check, validationResult } = require('express-validator')
 const config = require('config')
-const path = require('path');
 
 const PetPhoto = require('../../models/PetPhoto')
 

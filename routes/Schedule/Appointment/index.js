@@ -24,7 +24,6 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
         return res.status(400).json({
           errors: errors.array(),
@@ -32,7 +31,6 @@ router.post(
           message: 'Некорректные данные при создании',
         })
       }
-
       const {
         emplID,
         petID,
@@ -73,11 +71,9 @@ router.post(
           addService(item)
         }, serviceID)
       }
-
-
       await newAppointment.save()
 
-      res.status(200).json({ status: '0', message: 'Пациент записан на прием' })
+      res.status(200).json({ status: '2', message: 'Питомец записан на прием' })
     } catch (e) {
       res.status(500).json({ e, status: '1', message: 'Что-то пошло не так, попробуйте снова' })
     }

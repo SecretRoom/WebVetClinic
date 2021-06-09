@@ -2,18 +2,16 @@
 import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as R from 'ramda'
-import { Button, Card, Icon, Popup, Segment, Table } from 'semantic-ui-react'
+import { Button, Card, Icon, Popup, Table } from 'semantic-ui-react'
 import moment from 'moment'
 import ScheduleAPI from '../../../services/API/Schedule'
 import Pet from '../../../components/Pets/Pet'
-import { addToScheduleA, getScheduleAppointmentA, getScheduleServiceA, removeFromScheduleA, selectPetA } from '../actions'
+import { addToScheduleA, getScheduleAppointmentA, getScheduleServiceA, removeFromScheduleA } from '../actions'
 import {
   appointmentsS,
   isFetchingAppointmentsS,
   isFetchingPetsS,
   isFetchingServicesS,
-  petsS,
-  selectedPetIDS,
   selectedPetS,
   servicesS,
 } from '../selectors'

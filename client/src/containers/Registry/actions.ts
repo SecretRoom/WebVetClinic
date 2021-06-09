@@ -1,4 +1,4 @@
-import { createAsyncAction, createAction } from 'typesafe-actions'
+import { createAsyncAction } from 'typesafe-actions'
 import { REGISTRY_ERROR, REGISTRY_REQUEST, REGISTRY_SUCCESS } from './types'
 
 export const registryA = createAsyncAction(

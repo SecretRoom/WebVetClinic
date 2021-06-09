@@ -1,16 +1,11 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactElement, SyntheticEvent } from 'react'
 import {
-  Button,
   Segment,
-  Form,
-  Input,
-  Icon,
-  Popup,
   Dropdown,
-  Modal,
   Table,
   Header,
+  Divider,
 } from 'semantic-ui-react'
 import * as R from 'ramda'
 
@@ -25,6 +20,7 @@ type ServicesProps = {
   pets: any[]
   staffList: any[]
   servicesList: any[]
+  selectedServices: string[]
 
   handleSortColumn: (field: string) => void
   createScheduleAppointment: () => ReactElement
@@ -41,6 +37,7 @@ const Services = ({
   selectedEmpl,
   servicesList,
   sortDirection,
+  selectedServices,
 
   handleChangePet,
   handleChangeEmpl,
@@ -51,10 +48,10 @@ const Services = ({
   <div className="services">
     <Table
       celled
+      // basic
       sortable
       selectable
-      structured
-      className="services-cards"
+      className="services-table"
     >
       <Table.Header>
         <Table.Row>
@@ -79,10 +76,13 @@ const Services = ({
     </Table>
     <Segment
       className="add-service"
+      disabled={R.isEmpty(selectedServices)}
     >
       <Header
+        size="large"
         content="Запись на услуги"
       />
+      <Divider />
       <div className="drop">
         <div className="field">
           <span>Питомец</span>
@@ -91,8 +91,10 @@ const Services = ({
             selection
             clearable
             value={pet}
-            placeholder="Выберите питомца"
             selectOnBlur={false}
+            selectOnNavigation={false}
+            placeholder="Выберите питомца"
+            disabled={R.isEmpty(selectedServices)}
             options={R.map((item) => ({ key: item._id, value: item._id, text: item.nickname }), pets)}
             onChange={(e: SyntheticEvent, { value }: any): void => handleChangePet(e as never, value)}
           />
@@ -108,6 +110,7 @@ const Services = ({
             selectOnBlur={false}
             selectOnNavigation={false}
             placeholder="Выберите врача"
+            disabled={R.isEmpty(selectedServices)}
             onChange={(e: SyntheticEvent, { value }: any): void => handleChangeEmpl(e as never, value)}
           />
         </div>
